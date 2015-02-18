@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/Terravox">
+        <file>toolPan.png</file>
+        <file>toolLower.png</file>
+        <file>toolPaint.png</file>
+        <file>toolRaise.png</file>
+        <file>toolBlur.png</file>
+        <file>toolSmoothen.png</file>
+    </qresource>
+</RCC>
