@@ -152,6 +152,82 @@ void TerrainView::TerrainViewPrivate::renderLandform(Colorizer&& colorizer)
             if (WriteHeight)
                 std::fill(lineHeightOutput, lineHeightOutput + imgHeight, 1.e+4f);
 
+            // draw background
+            // FIXME: reduce overdraw
+            {
+                QVector3D bgScanStart(rayStart.x(), rayStart.y(), sceneDef.eye.z());
+                float floorLevel = 64.f;
+                bgScanStart += sceneDef.cameraDir * ((floorLevel - bgScanStart.z()) / sceneDef.cameraDir.z());
+                QVector3D bgScanDelta = QVector3D(rayDir.x(), rayDir.y(), 0) *
+                        -(sceneDef.viewHeight / imgHeight / sceneDef.cameraDir.z());
+                bgScanStart -= bgScanDelta * (imgHeight >> 1);
+                bgScanStart *= .5f; bgScanDelta *= .5f;
+                bgScanStart += QVector3D(0.25f, 0.25f, 0);
+
+                // compute coefs for antialiasing
+                float contrastX = 1.f / std::abs(bgScanDelta.x());
+                float contrastY = 1.f / std::abs(bgScanDelta.y());
+                float offsetX = contrastX * -.25f + .5f;
+                float offsetY = contrastY * -.25f + .5f;
+
+                auto contrastX4 = _mm_set1_ps(contrastX);
+                auto contrastY4 = _mm_set1_ps(contrastY);
+                auto offsetX4 = _mm_set1_ps(offsetX);
+                auto offsetY4 = _mm_set1_ps(offsetY);
+                auto bgScanPosX = _mm_setr_ps(
+                            bgScanStart.x(),
+                            bgScanStart.x() + bgScanDelta.x(),
+                            bgScanStart.x() + bgScanDelta.x() * 2,
+                            bgScanStart.x() + bgScanDelta.x() * 3);
+                auto bgScanPosY = _mm_setr_ps(
+                            bgScanStart.y(),
+                            bgScanStart.y() + bgScanDelta.y(),
+                            bgScanStart.y() + bgScanDelta.y() * 2,
+                            bgScanStart.y() + bgScanDelta.y() * 3);
+                auto bgScanDeltaX = _mm_set1_ps(bgScanDelta.x() * 4);
+                auto bgScanDeltaY = _mm_set1_ps(bgScanDelta.y() * 4);
+                auto mm_abs_ps = [](__m128 m) {
+                    return _mm_castsi128_ps(_mm_srli_epi32(_mm_slli_epi32(_mm_castps_si128(m), 1), 1));
+                };
+
+                for (int y = 0; y < imgHeight; y += 4) {
+                    auto fracX = _mm_sub_ps(bgScanPosX, _mm_floor_ps(bgScanPosX));
+                    auto fracY = _mm_sub_ps(bgScanPosY, _mm_floor_ps(bgScanPosY));
+
+                    fracX = mm_abs_ps(_mm_sub_ps(fracX, _mm_set1_ps(0.5f)));
+                    fracY = mm_abs_ps(_mm_sub_ps(fracY, _mm_set1_ps(0.5f)));
+
+                    fracX = _mm_add_ps(offsetX4, _mm_mul_ps(fracX, contrastX4));
+                    fracY = _mm_add_ps(offsetY4, _mm_mul_ps(fracY, contrastY4));
+
+                    fracX = _mm_max_ps(fracX, _mm_set1_ps(0.f));
+                    fracY = _mm_max_ps(fracY, _mm_set1_ps(0.f));
+                    fracX = _mm_min_ps(fracX, _mm_set1_ps(1.f));
+                    fracY = _mm_min_ps(fracY, _mm_set1_ps(1.f));
+
+                    auto pat1 = _mm_mul_ps(fracX, fracY);
+                    auto pat2 = _mm_sub_ps(_mm_set1_ps(1.f), fracX);
+                    auto pat3 = _mm_sub_ps(_mm_set1_ps(1.f), fracY);
+                    auto pat = _mm_add_ps(pat1, _mm_mul_ps(pat2, pat3));
+
+
+                    // generate color
+                    pat = _mm_mul_ps(pat, _mm_set1_ps(504.f));
+                    pat = _mm_add_ps(_mm_set1_ps(500.f), pat);
+
+                    // gamma correction
+                    pat = _mm_mul_ps(pat, _mm_rsqrt_ps(pat));
+
+                    auto patI = _mm_cvtps_epi32(pat);
+                    patI = _mm_or_si128(patI, _mm_slli_epi32(patI, 16));
+                    patI = _mm_or_si128(patI, _mm_slli_epi32(patI, 8));
+                    _mm_storeu_si128(reinterpret_cast<__m128i*>(lineColorOutput + y), patI);
+
+                    bgScanPosX = _mm_add_ps(bgScanPosX, bgScanDeltaX);
+                    bgScanPosY = _mm_add_ps(bgScanPosY, bgScanDeltaY);
+                }
+
+            }
 
             if (scanStart.x() < 0.f || scanStart.y() < 0.f ||
                 scanStart.x() > tWidth || scanStart.y() > tHeight) {
@@ -200,6 +276,7 @@ void TerrainView::TerrainViewPrivate::renderLandform(Colorizer&& colorizer)
             std::int_fast16_t lastImageY = static_cast<std::int_fast16_t>
                     (std::min<float>(lastImageFY, imgHeight));
             quint32 lastColor = 0x7f0000;
+            auto startImageY = lastImageY;
 
             float travelDistance = 0.f;
             float travelDistanceDelta = -1.f / zOffsetPerTravel;
@@ -347,10 +424,22 @@ void TerrainView::TerrainViewPrivate::renderLandform(Colorizer&& colorizer)
             fixAmt += depthBufferBias; // intentionally add bias to prevent flickering
 
             auto fixAmt4 = _mm_set1_ps(fixAmt);
-            for (int y = 0; y < imgHeight; y += 4) {
-                auto m = _mm_loadu_ps(lineDepthOutput + y);
-                m = _mm_add_ps(m, fixAmt4);
-                _mm_storeu_ps(lineDepthOutput + y, m);
+            {
+                int y = lastImageY;
+                int endY = startImageY;
+                while (y < endY && (y & 3)) {
+                    lineDepthOutput[y] += fixAmt; ++y;
+                }
+                int endYAligned = endY - 3;
+                while (y < endYAligned) {
+                    auto m = _mm_loadu_ps(lineDepthOutput + y);
+                    m = _mm_add_ps(m, fixAmt4);
+                    _mm_storeu_ps(lineDepthOutput + y, m);
+                    y += 4;
+                }
+                while (y < endY) {
+                    lineDepthOutput[y] += fixAmt; ++y;
+                }
             }
         }
     });

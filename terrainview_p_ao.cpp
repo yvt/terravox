@@ -273,8 +273,19 @@ void TerrainView::TerrainViewPrivate::applyAmbientOcclusion()
             auto p = pColumn;
             pColumn = _mm_add_ps(pColumn, dpdxMM);
 
-            for (int y = 0; y < imgHeight; y += 4) {
-                // FIXME: cull background
+            for (int y = 0; y < imgHeight;
+                 y += 4,
+                 lineColorOutput += 4,
+                 lineDepthInput += 4,
+                 lineHeightInput += 4) {
+                auto floorHeight = _mm_loadu_ps(lineHeightInput);
+
+                // background cull
+                auto isForeground = _mm_castsi128_ps(_mm_cmplt_ps(floorHeight, _mm_set1_ps(512.f)));
+                if (!_mm_movemask_ps(isForeground)) {
+                    p = _mm_add_ps(p, dpdyMM4);
+                    continue;
+                }
 
                 auto p1 = p;
                 auto p2 = _mm_add_ps(p1, dpdyMM);
@@ -296,7 +307,6 @@ void TerrainView::TerrainViewPrivate::applyAmbientOcclusion()
                 auto terrainZ2 = _mm_movehl_ps(p4, p3);
                 auto terrainZ = _mm_shuffle_ps(terrainZ1, terrainZ2, _MM_SHUFFLE(2, 0, 2, 0));
 
-                auto floorHeight = _mm_loadu_ps(lineHeightInput);
                 auto minAoVolumeHeight = _mm_sub_ps(terrainZ, _mm_set1_ps(AORange * 4.f));
 
                 xyF1 = _mm_max_ps(xyF1, _mm_setzero_ps());
@@ -374,17 +384,20 @@ void TerrainView::TerrainViewPrivate::applyAmbientOcclusion()
 
                 // load color
                 auto col = _mm_loadu_si128(reinterpret_cast<__m128i*>(lineColorOutput));
+                auto originalColor = col;
                 auto colLo = _mm_unpacklo_epi8(col, _mm_setzero_si128());
                 colLo = _mm_srai_epi16(_mm_mullo_epi16(colLo, _mm_unpacklo_epi16(coeff, coeff)), 6);
                 auto colHi = _mm_unpackhi_epi8(col, _mm_setzero_si128());
                 colHi = _mm_srai_epi16(_mm_mullo_epi16(colHi, _mm_unpackhi_epi16(coeff, coeff)), 6);
                 col = _mm_packus_epi16(colLo, colHi);
 
+                // keep background color original
+                col = _mm_and_ps(isForeground, col);
+                originalColor = _mm_andnot_ps(isForeground, originalColor);
+                col = _mm_or_ps(col, originalColor);
+
                 _mm_storeu_si128(reinterpret_cast<__m128i*>(lineColorOutput), col);
 
-                lineColorOutput += 4;
-                lineDepthInput += 4;
-                lineHeightInput += 4;
             }
         }
     });
