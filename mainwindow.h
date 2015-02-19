@@ -19,6 +19,7 @@ class MainWindow;
 class ToolController;
 class EffectController;
 class ColorPickerWindow;
+class ColorSamplerView;
 
 class MainWindow : public QMainWindow
 {
@@ -33,6 +34,8 @@ private:
 
     QSharedPointer<Session> session;
     QString currentFilePath;
+
+    QScopedPointer<ColorSamplerView> colorSampler;
 
     QWidget *currentToolEditor;
     QSharedPointer<ToolView> currentToolView;

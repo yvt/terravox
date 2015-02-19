@@ -57,6 +57,9 @@ public:
     void setViewOptions(const TerrainViewOptions&);
     const TerrainViewOptions &viewOptions();
 
+    void addCursorOverride(QCursor *);
+    void removeCursorOverride(QCursor *);
+
 protected:
     void paintEvent(QPaintEvent *) override;
 
@@ -64,12 +67,16 @@ protected:
     void mouseReleaseEvent(QMouseEvent *) override;
     void mouseMoveEvent(QMouseEvent *) override;
     void wheelEvent(QWheelEvent *) override;
+    void enterEvent(QEvent *) override;
+    void leaveEvent(QEvent *) override;
 
 signals:
     void clientMousePressed(QMouseEvent *);
     void clientMouseReleased(QMouseEvent *);
     void clientMouseMoved(QMouseEvent *);
     void clientPaint(QPaintEvent *);
+    void clientEnter(QEvent *);
+    void clientLeave(QEvent *);
     void terrainPaint(TerrainViewDrawingContext *);
 
 public slots:
@@ -81,6 +88,8 @@ private:
     class TerrainViewPrivate;
     TerrainViewPrivate *d_ptr;
     QScopedPointer<TerrainViewOptionsWindow> optionsWindow;
+
+    QCursor *cursorOverride = nullptr;
 
     Q_DECLARE_PRIVATE(TerrainView)
 

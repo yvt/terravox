@@ -12,6 +12,7 @@
 #include "session.h"
 #include "colorpickerwindow.h"
 #include "colorpicker.h"
+#include "colorsamplerview.h"
 
 #include "toolcontroller.h"
 #include "brushtoolcontroller.h"
@@ -74,6 +75,10 @@ MainWindow::MainWindow(QWidget *parent) :
     addTool(new BrushToolController(BrushType::Smoothen), ui->toolSmoothen);
     addTool(new BrushToolController(BrushType::Paint), ui->toolPaint);
     addTool(new BrushToolController(BrushType::Blur), ui->toolBlur);
+
+    colorSampler.reset(new ColorSamplerView(ui->terrainView));
+    connect(colorSampler.data(), SIGNAL(sampled(QColor)),
+            ui->primaryColorView, SLOT(setValue(QColor)));
 
     QSharedPointer<Session> s = QSharedPointer<Session>::create();
     s->setTerrain(QSharedPointer<Terrain>(TerrainGenerator(QSize(512, 512)).generateRandomLandform()));

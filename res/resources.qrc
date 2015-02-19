@@ -6,5 +6,7 @@
         <file>toolRaise.png</file>
         <file>toolBlur.png</file>
         <file>toolSmoothen.png</file>
+        <file>cursorEyedropper.png</file>
+        <file>cursorHand.png</file>
     </qresource>
 </RCC>

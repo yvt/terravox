@@ -5,6 +5,7 @@
 #include "terrain.h"
 #include "session.h"
 #include "terrainedit.h"
+#include <QApplication>
 
 static const QPoint InvalidPoint(-1000, -1000);
 
@@ -13,7 +14,8 @@ BrushToolView::BrushToolView(TerrainView *view, Session *session, BrushTool *too
     tool(tool),
     cursor(InvalidPoint),
     lastCursor(InvalidPoint),
-    session(session)
+    session(session),
+    otherActive(false)
 {
     connect(view, SIGNAL(clientMousePressed(QMouseEvent*)),
             SLOT(clientMousePressed(QMouseEvent*)));
@@ -42,6 +44,10 @@ BrushToolView::~BrushToolView()
 
 void BrushToolView::clientMousePressed(QMouseEvent *e)
 {
+    if (e->isAccepted() || e->button() != Qt::LeftButton) {
+        otherActive = true;
+        return;
+    }
     e->accept();
 
     if (cursor == InvalidPoint) {
@@ -95,6 +101,9 @@ void BrushToolView::clientMouseReleased(QMouseEvent *e)
         timer->stop();;
         session->endEdit();
     }
+    if (e->buttons() == 0) {
+        otherActive = false;
+    }
 }
 
 void BrushToolView::clientMouseMoved(QMouseEvent *e)
@@ -136,6 +145,10 @@ void BrushToolView::terrainPaint(TerrainViewDrawingContext *ctx)
         return;
     }
     if (currentEdit) {
+        return;
+    }
+    if (otherActive || QApplication::keyboardModifiers() & Qt::AltModifier) {
+        // eyedropper active
         return;
     }
     if (tipImage.isNull()) {

@@ -29,6 +29,7 @@ private:
     QPoint cursor;
     QPoint lastCursor;
     Session *session;
+    bool otherActive;
 
     QPoint dragStartPos;
     QElapsedTimer elapsedTimer;

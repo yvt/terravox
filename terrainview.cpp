@@ -67,11 +67,24 @@ const TerrainViewOptions &TerrainView::viewOptions()
     return d->viewOptions;
 }
 
+void TerrainView::addCursorOverride(QCursor *cursor)
+{
+    setCursor(*cursor);
+    cursorOverride = cursor;
+}
+
+void TerrainView::removeCursorOverride(QCursor *cursor)
+{
+    if (cursor == cursorOverride) {
+        setCursor(QCursor());
+        cursorOverride = nullptr;
+    }
+}
+
 void TerrainView::paintEvent(QPaintEvent *e)
 {
     Q_D(TerrainView);
     auto size = this->size();
-
 
     SceneDefinition def;
     def.cameraDir = QVector3D(std::cos(d->yaw_) * std::cos(d->pitch_),
@@ -175,6 +188,16 @@ void TerrainView::wheelEvent(QWheelEvent *e)
 
     update();
     e->accept();
+}
+
+void TerrainView::enterEvent(QEvent *e)
+{
+    emit clientEnter(e);
+}
+
+void TerrainView::leaveEvent(QEvent *e)
+{
+    emit clientLeave(e);
 }
 
 void TerrainView::showOptionsWindow()
