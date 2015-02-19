@@ -3,6 +3,7 @@
 #include "terrain.h"
 #include <QtConcurrent>
 #include <QMatrix4x4>
+#include "temporarybuffer.h"
 
 static constexpr int AORange = 2;
 
@@ -54,6 +55,11 @@ void TerrainView::TerrainViewPrivate::updateAmbientOcclusion()
 
     int maxX = std::min(updateRect.right(), tWidth - 2);
 
+    const float Bottom = 64.f;
+
+    TemporaryBuffer<float> dummyRow(tWidth);
+    auto *dummyRowData = dummyRow.get();
+    std::fill(dummyRowData, dummyRowData + tWidth, Bottom);
 
     QtConcurrent::blockingMap(
                 RangeIterator(updateRect.top() >> 4),
@@ -63,10 +69,10 @@ void TerrainView::TerrainViewPrivate::updateAmbientOcclusion()
         int minY = std::max(updateRect.top(), block << 4);
         int maxY = std::min(updateRect.bottom(), (block << 4) + 15);
         for (int y = minY; y <= maxY; ++y) {
-            float *inLand1 = landform + std::max(y - 2, 0) * tWidth;
-            float *inLand2 = landform + std::max(y - 1, 0) * tWidth;
-            float *inLand3 = landform +                  y * tWidth;
-            float *inLand4 = landform + std::min(y + 1, tHeight - 1) * tWidth;
+            float *inLand1 = y < 2 ? dummyRowData : landform + (y - 2) * tWidth;
+            float *inLand2 = y < 1 ? dummyRowData : landform + (y - 1) * tWidth;
+            float *inLand3 =                          landform + (y)     * tWidth;
+            float *inLand4 = y >= tHeight - 1 ? dummyRowData : landform + (y + 1) * tWidth;
             float *outMap = aoMap + y * aoMapWidth;
 
             auto convolute = [kernel1, kernel2, kernel3, kernel4](__m128 in1, __m128 in2, __m128 in3, __m128 in4) -> __m128
@@ -93,7 +99,7 @@ void TerrainView::TerrainViewPrivate::updateAmbientOcclusion()
                 auto a2 = _mm_min_ps(in3, in4);
                 auto b = _mm_min_ps(a1, a2);
                 auto c = _mm_min_ps(b, _mm_shuffle_ps(b, b, _MM_SHUFFLE(2, 3, 0, 1)));
-                auto d = _mm_min_ps(c, _mm_shuffle_ps(b, b, _MM_SHUFFLE(1, 0, 3, 2)));
+                auto d = _mm_min_ps(c, _mm_shuffle_ps(c, c, _MM_SHUFFLE(1, 0, 3, 2)));
 
                 // restore reference plane
                 d = _mm_add_ss(d, ref);
@@ -103,10 +109,10 @@ void TerrainView::TerrainViewPrivate::updateAmbientOcclusion()
 
             int x = updateRect.left();
             if (x == 0) {
-                auto in1 = _mm_loadh_pi(_mm_setzero_ps(), reinterpret_cast<const __m64*>(inLand1));
-                auto in2 = _mm_loadh_pi(_mm_setzero_ps(), reinterpret_cast<const __m64*>(inLand2));
-                auto in3 = _mm_loadh_pi(_mm_setzero_ps(), reinterpret_cast<const __m64*>(inLand3));
-                auto in4 = _mm_loadh_pi(_mm_setzero_ps(), reinterpret_cast<const __m64*>(inLand4));
+                auto in1 = _mm_loadh_pi(_mm_set1_ps(Bottom), reinterpret_cast<const __m64*>(inLand1));
+                auto in2 = _mm_loadh_pi(_mm_set1_ps(Bottom), reinterpret_cast<const __m64*>(inLand2));
+                auto in3 = _mm_loadh_pi(_mm_set1_ps(Bottom), reinterpret_cast<const __m64*>(inLand3));
+                auto in4 = _mm_loadh_pi(_mm_set1_ps(Bottom), reinterpret_cast<const __m64*>(inLand4));
                 auto result = convolute(in1, in2, in3, in4);
                 _mm_store_ss(outMap, result);
                 ++x;
@@ -116,6 +122,10 @@ void TerrainView::TerrainViewPrivate::updateAmbientOcclusion()
                 auto in2 = _mm_loadu_ps(inLand2); in2 = _mm_slli_si128(in2, 4);
                 auto in3 = _mm_loadu_ps(inLand3); in3 = _mm_slli_si128(in3, 4);
                 auto in4 = _mm_loadu_ps(inLand4); in4 = _mm_slli_si128(in4, 4);
+                in1 = _mm_move_ss(in1, _mm_set_ss(Bottom));
+                in2 = _mm_move_ss(in2, _mm_set_ss(Bottom));
+                in3 = _mm_move_ss(in3, _mm_set_ss(Bottom));
+                in4 = _mm_move_ss(in4, _mm_set_ss(Bottom));
                 auto result = convolute(in1, in2, in3, in4);
                 _mm_store_ss(outMap + 1, result);
                 ++x;
@@ -130,10 +140,18 @@ void TerrainView::TerrainViewPrivate::updateAmbientOcclusion()
                 ++x;
             }
             if (maxX != updateRect.right()) {
-                auto in1 = _mm_loadu_ps(inLand1 + x - 3); in1 = _mm_srli_si128(in1, 4);
-                auto in2 = _mm_loadu_ps(inLand2 + x - 3); in2 = _mm_srli_si128(in2, 4);
-                auto in3 = _mm_loadu_ps(inLand3 + x - 3); in3 = _mm_srli_si128(in3, 4);
-                auto in4 = _mm_loadu_ps(inLand4 + x - 3); in4 = _mm_srli_si128(in4, 4);
+                auto in1 = _mm_loadu_ps(inLand1 + x - 3);
+                auto in2 = _mm_loadu_ps(inLand2 + x - 3);
+                auto in3 = _mm_loadu_ps(inLand3 + x - 3);
+                auto in4 = _mm_loadu_ps(inLand4 + x - 3);
+                in1 = _mm_move_ss(in1, _mm_set_ss(Bottom));
+                in2 = _mm_move_ss(in2, _mm_set_ss(Bottom));
+                in3 = _mm_move_ss(in3, _mm_set_ss(Bottom));
+                in4 = _mm_move_ss(in4, _mm_set_ss(Bottom));
+                in1 = _mm_shuffle_ps(in1, in1, _MM_SHUFFLE(0, 3, 2, 1));
+                in2 = _mm_shuffle_ps(in2, in2, _MM_SHUFFLE(0, 3, 2, 1));
+                in3 = _mm_shuffle_ps(in3, in3, _MM_SHUFFLE(0, 3, 2, 1));
+                in4 = _mm_shuffle_ps(in4, in4, _MM_SHUFFLE(0, 3, 2, 1));
                 auto result = convolute(in1, in2, in3, in4);
                 _mm_store_ss(outMap + x, result);
             }
@@ -151,6 +169,7 @@ void TerrainView::TerrainViewPrivate::applyAmbientOcclusion()
     const int imgHeight = image_->size().height();
     quint32 *colorOutput = transposedImage_.data();
     float *depthInput = depthImage_.data();
+    float *heightInput = heightImage_.data();
 
     Q_ASSUME(imgHeight >= 8);
     Q_ASSUME(imgHeight % 4 == 0);
@@ -192,11 +211,11 @@ void TerrainView::TerrainViewPrivate::applyAmbientOcclusion()
     //   3. compute difference between AO volume height and the height of the framebuffer pixel
     //   4. shade the framebuffer pixel
 
-    float strength = 5.f - std::abs(QVector3D::dotProduct(upVector, cameraDir2D)) * 6.f;
+    float strength = 15.f - std::abs(QVector3D::dotProduct(upVector, cameraDir2D)) * 16.f;
     if (strength <= 0.f) {
         return;
     }
-    strength = std::min(strength, 1.f);
+    strength = std::min(strength, 1.f) * viewOptions.ambientOcclusionStrength * 2.f;
 
     // compute matrix M
     QMatrix4x4 m(cameraDir2D.x(), cameraDir2D.y(), 0.f, 0.f,
@@ -229,7 +248,8 @@ void TerrainView::TerrainViewPrivate::applyAmbientOcclusion()
                       -(imgWidth >> 1) * sceneDef.viewWidth / imgWidth + QVector3D::dotProduct(sceneDef.eye, rightVector), 0.f));
     auto pBaseMM = _mm_setr_ps(pBase.x(), pBase.y(), pBase.z(), 0.f);
 
-    auto aoCoordMax = _mm_setr_ps(tWidth * 256.f - 1.f, tHeight * 256.f - 1.f, 0.f, 0.f);
+    // auto aoCoordMax = _mm_setr_ps(tWidth * 256.f - 2.f, tHeight * 256.f - 2.f, 0.f, 0.f); // work-around for border problem
+    auto aoCoordMax = _mm_setr_ps(tWidth * 256.f - 256.f, tHeight * 256.f - 256.f, 0.f, 0.f);
     aoCoordMax = _mm_movelh_ps(aoCoordMax, aoCoordMax);
 
     // s24.8 fixed point (XY)
@@ -249,6 +269,7 @@ void TerrainView::TerrainViewPrivate::applyAmbientOcclusion()
         for (int x = minX; x < maxX; ++x) {
             quint32 *lineColorOutput = colorOutput + x * imgHeight;
             float *lineDepthInput = depthInput + x * imgHeight;
+            float *lineHeightInput = heightInput + x * imgHeight;
             auto p = pColumn;
             pColumn = _mm_add_ps(pColumn, dpdxMM);
 
@@ -275,6 +296,7 @@ void TerrainView::TerrainViewPrivate::applyAmbientOcclusion()
                 auto terrainZ2 = _mm_movehl_ps(p4, p3);
                 auto terrainZ = _mm_shuffle_ps(terrainZ1, terrainZ2, _MM_SHUFFLE(2, 0, 2, 0));
 
+                auto floorHeight = _mm_loadu_ps(lineHeightInput);
                 auto minAoVolumeHeight = _mm_sub_ps(terrainZ, _mm_set1_ps(AORange));
 
                 xyF1 = _mm_max_ps(xyF1, _mm_setzero_ps());
@@ -311,10 +333,10 @@ void TerrainView::TerrainViewPrivate::applyAmbientOcclusion()
                         aoMap[_mm_extract_epi16(xyII2, 0) + 1 + (_mm_extract_epi16(xyII2, 2) + 1) * aoMapWidth],
                         aoMap[_mm_extract_epi16(xyII2, 4) + 1 + (_mm_extract_epi16(xyII2, 6) + 1) * aoMapWidth]);
 
-                aoZ1 = _mm_max_ps(aoZ1, minAoVolumeHeight);
-                aoZ2 = _mm_max_ps(aoZ2, minAoVolumeHeight);
-                aoZ3 = _mm_max_ps(aoZ3, minAoVolumeHeight);
-                aoZ4 = _mm_max_ps(aoZ4, minAoVolumeHeight);
+                //aoZ1 = _mm_max_ps(aoZ1, minAoVolumeHeight);
+                //aoZ2 = _mm_max_ps(aoZ2, minAoVolumeHeight);
+                //aoZ3 = _mm_max_ps(aoZ3, minAoVolumeHeight);
+                //aoZ4 = _mm_max_ps(aoZ4, minAoVolumeHeight);
 
                 // global coordinate's fracional part ([0, 255])
                 auto xyIF1 = _mm_sub_epi32(xyI1, _mm_slli_epi32(xyII1, 8));
@@ -336,10 +358,16 @@ void TerrainView::TerrainViewPrivate::applyAmbientOcclusion()
                 //aoDepth = _mm_min_ps(aoDepth, _mm_set1_ps(AORange));
                 aoDepth = _mm_max_ps(aoDepth, _mm_setzero_ps());
 
+                // approx exp(-aoDepth * hoge)
+                auto aoDepthLog = _mm_cvttps_epi32(_mm_mul_ps(aoDepth, _mm_set1_ps(-(1<<22) * strength)));
+                aoDepthLog = _mm_add_epi32(aoDepthLog, _mm_set1_epi32(0x3f800000));
+                aoDepth = _mm_castsi128_ps(aoDepthLog);
+                aoDepth = _mm_mul_ps(aoDepth, _mm_rsqrt_ps(aoDepth));
+                //aoDepth = _mm_add_ps(_mm_mul_ps(_mm_sub_ps(_mm_set1_ps(1.f), aoDepth), _mm_set1_ps(0.6f)), aoDepth);
+
                 // calculate color coef
-                auto coeff = _mm_mul_ps(aoDepth, _mm_set1_ps(-16.f * strength));   // f32 * 4
-                coeff = _mm_add_ps(coeff, _mm_set1_ps(64.5f));   // f32 * 4
-                /* DEBUG */ // coeff = _mm_mul_ps(aoDepth, _mm_set1_ps(32.f ));
+                auto coeff = _mm_mul_ps(aoDepth, _mm_set1_ps(64.5f));   // f32 * 4
+                /* DEBUG */ // coeff = _mm_mul_ps(aoZ, _mm_set1_ps(1.f ));
                 coeff = _mm_cvttps_epi32(coeff);                // i32 * 4
                 coeff = _mm_packs_epi32(coeff, coeff);          // i16 * 4 + pad
                 coeff = _mm_unpacklo_epi16(coeff, coeff);       // i16 [c1, c1, c2, c2, c3, c3, c4, c4]
@@ -356,6 +384,7 @@ void TerrainView::TerrainViewPrivate::applyAmbientOcclusion()
 
                 lineColorOutput += 4;
                 lineDepthInput += 4;
+                lineHeightInput += 4;
             }
         }
     });

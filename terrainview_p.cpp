@@ -57,6 +57,15 @@ static bool pushToBoundary(QVector2D &v, const QVector2D &rayDir, const QVector2
 }
 
 template <class Colorizer>
+void TerrainView::TerrainViewPrivate::renderLandform1(Colorizer&& colorizer)
+{
+    if (viewOptions.ambientOcclusion)
+        renderLandform<Colorizer, true>(std::move(colorizer));
+    else
+        renderLandform<Colorizer, false>(std::move(colorizer));
+}
+
+template <class Colorizer, bool WriteHeight>
 void TerrainView::TerrainViewPrivate::renderLandform(Colorizer&& colorizer)
 {
 
@@ -80,6 +89,7 @@ void TerrainView::TerrainViewPrivate::renderLandform(Colorizer&& colorizer)
 
     quint32 *colorOutput = transposedImage_.data();
     float *depthOutput = depthImage_.data();
+    float *heightOutput = WriteHeight ? heightImage_.data() : nullptr;
 
     enum class Wall
     {
@@ -114,6 +124,7 @@ void TerrainView::TerrainViewPrivate::renderLandform(Colorizer&& colorizer)
         for (int x = minX; x < maxX; ++x) {
             quint32 *lineColorOutput = colorOutput + x * imgHeight;
             float *lineDepthOutput = depthOutput + x * imgHeight;
+            float *lineHeightOutput = WriteHeight ? heightOutput + x * imgHeight : nullptr;
 
             const float *landform = landform_;
             const quint32 *color = color_;
@@ -138,6 +149,9 @@ void TerrainView::TerrainViewPrivate::renderLandform(Colorizer&& colorizer)
             }
             std::memset(lineColorOutput, 0xf, imgHeight * 4);
             std::fill(lineDepthOutput, lineDepthOutput + imgHeight, 1.e+4f);
+            if (WriteHeight)
+                std::fill(lineHeightOutput, lineHeightOutput + imgHeight, 1.e+4f);
+
 
             if (scanStart.x() < 0.f || scanStart.y() < 0.f ||
                 scanStart.x() > tWidth || scanStart.y() > tHeight) {
@@ -181,7 +195,8 @@ void TerrainView::TerrainViewPrivate::renderLandform(Colorizer&& colorizer)
             zOffset += QVector2D::dotProduct((scanStart - QVector2D(sceneDef.eye.x(), sceneDef.eye.y())), rayDir)
                     * zOffsetPerTravel;
 
-            float lastImageFY = zOffset + zScale * 64.f;
+            float lastHeight = 64.f;
+            float lastImageFY = zOffset + zScale * lastHeight;
             std::int_fast16_t lastImageY = static_cast<std::int_fast16_t>
                     (std::min<float>(lastImageFY, imgHeight));
             quint32 lastColor = 0x7f0000;
@@ -195,6 +210,7 @@ void TerrainView::TerrainViewPrivate::renderLandform(Colorizer&& colorizer)
                     --lastImageY;
                     lineColorOutput[lastImageY] = lastColor;
                     lineDepthOutput[lastImageY] = travelDistance;
+                    if (WriteHeight) lineHeightOutput[lastImageY] = lastHeight;
                 }
             };
             auto fillFloor = [&](std::int_fast16_t y) {
@@ -206,6 +222,7 @@ void TerrainView::TerrainViewPrivate::renderLandform(Colorizer&& colorizer)
                         --lastImageY;
                         lineColorOutput[lastImageY] = lastColor;
                         lineDepthOutput[lastImageY] = depth;
+                        if (WriteHeight) lineHeightOutput[lastImageY] = lastHeight;
                         depth += travelDistanceDelta;
                     } while (lastImageY > y);
                 }
@@ -313,6 +330,7 @@ void TerrainView::TerrainViewPrivate::renderLandform(Colorizer&& colorizer)
                     // prepare for next floor drawing
                     lastColor = col;
                     lastImageFY = nextImgFY;
+                    lastHeight = land;
 
                     enteredScreen = 1;
                 }
@@ -451,6 +469,7 @@ QImage &TerrainView::TerrainViewPrivate::render(QSize size, const SceneDefinitio
         // Regenerate image
         image_.reset(new QImage(size, QImage::Format_RGB32));
         depthImage_.resize(size.width() * size.height());
+        heightImage_.resize(size.width() * size.height());
         transposedImage_.resize(size.width() * size.height());
     }
 
@@ -466,7 +485,7 @@ QImage &TerrainView::TerrainViewPrivate::render(QSize size, const SceneDefinitio
     cameraDir2D = QVector2D(sceneDef.cameraDir.x(), sceneDef.cameraDir.y()).normalized();
 
     if (viewOptions.colorizeAltitude)
-        renderLandform([](quint32 color, float alt) {
+        renderLandform1([](quint32 color, float alt) {
             (void) color;
             if (alt >= 62.5f) {
                 return 0x102040;
@@ -486,7 +505,7 @@ QImage &TerrainView::TerrainViewPrivate::render(QSize size, const SceneDefinitio
             return _mm_extract_epi32(mI, 0);
         });
     else
-        renderLandform([](quint32 color, float alt) { return color; });
+        renderLandform1([](quint32 color, float alt) { return color; });
     if (viewOptions.showEdges)
         applySharpeningFilter();
     if (viewOptions.ambientOcclusion)

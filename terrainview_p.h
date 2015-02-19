@@ -45,8 +45,9 @@ class TerrainView::TerrainViewPrivate
     float dragStartYaw_;
     float dragStartPitch_;
 
-    QVector<float> depthImage_;
-    QVector<quint32> transposedImage_;
+    QVector<float> depthImage_;         // depth buffer dot(p, cameraDir2D)
+    QVector<float> heightImage_;        // pseudo height buffer (for wall, use highest Z)
+    QVector<quint32> transposedImage_;  // color buffer
     std::unique_ptr<QImage> image_;
 
     QSharedPointer<Terrain> terrain_;
@@ -64,8 +65,11 @@ class TerrainView::TerrainViewPrivate
 
     TerrainViewOptions viewOptions;
 
-    template <class Colorizer>
+    template <class Colorizer, bool WriteHeight>
     void renderLandform(Colorizer&& colorizer);
+
+    template <class Colorizer>
+    void renderLandform1(Colorizer&& colorizer);
 
     void updateAmbientOcclusion();
     void applyAmbientOcclusion();
