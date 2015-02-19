@@ -24,7 +24,9 @@ void TerrainEdit::beginEdit(const QRect &r, Terrain *t)
 {
     Q_ASSERT(!done_);
     Q_ASSERT(t);
-    Q_ASSERT(r.isValid());
+    if (r.isEmpty()) {
+        return;
+    }
     Q_ASSERT(r.left() >= 0); Q_ASSERT(r.top() >= 0);
     Q_ASSERT(r.x() + r.width() <= t->size().width());
     Q_ASSERT(r.y() + r.height() <= t->size().height());
@@ -114,8 +116,8 @@ void TerrainEdit::copyBeforeTo(const QRect &srcRect, Terrain *after, Terrain *co
 
     QRect r = srcRect;
     Q_ASSERT(r.x() >= 0); Q_ASSERT(r.y() >= 0);
-    Q_ASSERT(r.x() + r.width() < after->size().width());
-    Q_ASSERT(r.y() + r.height() < after->size().height());
+    Q_ASSERT(r.x() + r.width() <= after->size().width());
+    Q_ASSERT(r.y() + r.height() <= after->size().height());
 
     // TODO: clip copy destination size by srcRect
 
