@@ -46,7 +46,9 @@ SOURCES += main.cpp\
     terrainview_p.cpp \
     terrainview_p_context.cpp \
     terrainview_p_ao.cpp \
-    colorsamplerview.cpp
+    colorsamplerview.cpp \
+    manipulatetoolcontroller.cpp \
+    manipulatetoolview.cpp
 
 HEADERS  += mainwindow.h \
     brusheditor.h \
@@ -76,7 +78,9 @@ HEADERS  += mainwindow.h \
     erosioneffectcontroller.h \
     erosioneditor.h \
     terrainview_p.h \
-    colorsamplerview.h
+    colorsamplerview.h \
+    manipulatetoolcontroller.h \
+    manipulatetoolview.h
 
 FORMS    += mainwindow.ui \
     brusheditor.ui \

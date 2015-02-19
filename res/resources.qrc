@@ -8,5 +8,7 @@
         <file>toolSmoothen.png</file>
         <file>cursorEyedropper.png</file>
         <file>cursorHand.png</file>
+        <file>toolManipulate.png</file>
+        <file>toolPen.png</file>
     </qresource>
 </RCC>

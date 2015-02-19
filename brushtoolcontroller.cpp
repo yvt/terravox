@@ -29,7 +29,7 @@ QString BrushToolController::name()
     switch (tool->type()) {
     case BrushType::Raise: return "Raise";
     case BrushType::Lower: return "Lower";
-    case BrushType::Paint: return "Paint";
+    case BrushType::Paint: return "Paint Brush";
     case BrushType::Smoothen: return "Smoothen";
     case BrushType::Blur: return "Blur";
     }

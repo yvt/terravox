@@ -9,7 +9,7 @@
 #include "temporarybuffer.h"
 #include <cmath>
 
-static const float depthBufferBias = -1.e-1f; // intentionally add bias to prevent flickering
+static const float depthBufferBias = -1.e-3f; // intentionally add bias to prevent flickering
 
 struct TerrainView::SceneDefinition
 {

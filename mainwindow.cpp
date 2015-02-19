@@ -19,6 +19,7 @@
 #include "emptytooleditor.h"
 #include "effectcontroller.h"
 #include "erosioneffectcontroller.h"
+#include "manipulatetoolcontroller.h"
 
 #include "terraingenerator.h"
 #include "terrain.h"
@@ -75,6 +76,8 @@ MainWindow::MainWindow(QWidget *parent) :
     addTool(new BrushToolController(BrushType::Smoothen), ui->toolSmoothen);
     addTool(new BrushToolController(BrushType::Paint), ui->toolPaint);
     addTool(new BrushToolController(BrushType::Blur), ui->toolBlur);
+    addTool(new ManipulateToolController(ManipulateMode::Landform), ui->toolManipulateHeight);
+    addTool(new ManipulateToolController(ManipulateMode::Color), ui->toolManipulateColor);
 
     colorSampler.reset(new ColorSamplerView(ui->terrainView));
     connect(colorSampler.data(), SIGNAL(sampled(QColor)),
@@ -391,6 +394,8 @@ void MainWindow::toolChanged()
     if (session->tool())
         currentToolEditor = session->tool()->createEditor(session.data());
     else
+        currentToolEditor = new EmptyToolEditor();
+    if (currentToolEditor == nullptr)
         currentToolEditor = new EmptyToolEditor();
 
     // tool name label

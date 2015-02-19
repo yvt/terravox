@@ -154,6 +154,35 @@
         </widget>
        </item>
        <item>
+        <widget class="QToolButton" name="toolManipulateHeight">
+         <property name="toolTip">
+          <string>Manipulate</string>
+         </property>
+         <property name="text">
+          <string>Raise</string>
+         </property>
+         <property name="icon">
+          <iconset resource="res/resources.qrc">
+           <normaloff>:/Terravox/toolManipulate.png</normaloff>:/Terravox/toolManipulate.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>20</width>
+           <height>20</height>
+          </size>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="autoExclusive">
+          <bool>true</bool>
+         </property>
+         <property name="autoRaise">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QToolButton" name="toolRaise">
          <property name="toolTip">
           <string>Raise</string>
@@ -251,12 +280,41 @@
         </widget>
        </item>
        <item>
-        <widget class="QToolButton" name="toolPaint">
+        <widget class="QToolButton" name="toolManipulateColor">
          <property name="toolTip">
           <string>Paint</string>
          </property>
          <property name="text">
-          <string>Paint</string>
+          <string>Paint Brush</string>
+         </property>
+         <property name="icon">
+          <iconset resource="res/resources.qrc">
+           <normaloff>:/Terravox/toolPen.png</normaloff>:/Terravox/toolPen.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>20</width>
+           <height>20</height>
+          </size>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="autoExclusive">
+          <bool>true</bool>
+         </property>
+         <property name="autoRaise">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="toolPaint">
+         <property name="toolTip">
+          <string>Paint Brush</string>
+         </property>
+         <property name="text">
+          <string>Paint Brush</string>
          </property>
          <property name="icon">
           <iconset resource="res/resources.qrc">
