@@ -31,7 +31,7 @@ struct TerrainViewOptions
         showEdges(true),
         colorizeAltitude(false),
         ambientOcclusion(true),
-        ambientOcclusionStrength(0.3f)
+        ambientOcclusionStrength(0.5f)
     { }
 };
 

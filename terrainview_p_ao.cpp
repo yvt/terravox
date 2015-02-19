@@ -297,7 +297,7 @@ void TerrainView::TerrainViewPrivate::applyAmbientOcclusion()
                 auto terrainZ = _mm_shuffle_ps(terrainZ1, terrainZ2, _MM_SHUFFLE(2, 0, 2, 0));
 
                 auto floorHeight = _mm_loadu_ps(lineHeightInput);
-                auto minAoVolumeHeight = _mm_sub_ps(terrainZ, _mm_set1_ps(AORange));
+                auto minAoVolumeHeight = _mm_sub_ps(terrainZ, _mm_set1_ps(AORange * 4.f));
 
                 xyF1 = _mm_max_ps(xyF1, _mm_setzero_ps());
                 xyF2 = _mm_max_ps(xyF2, _mm_setzero_ps());
@@ -333,10 +333,10 @@ void TerrainView::TerrainViewPrivate::applyAmbientOcclusion()
                         aoMap[_mm_extract_epi16(xyII2, 0) + 1 + (_mm_extract_epi16(xyII2, 2) + 1) * aoMapWidth],
                         aoMap[_mm_extract_epi16(xyII2, 4) + 1 + (_mm_extract_epi16(xyII2, 6) + 1) * aoMapWidth]);
 
-                //aoZ1 = _mm_max_ps(aoZ1, minAoVolumeHeight);
-                //aoZ2 = _mm_max_ps(aoZ2, minAoVolumeHeight);
-                //aoZ3 = _mm_max_ps(aoZ3, minAoVolumeHeight);
-                //aoZ4 = _mm_max_ps(aoZ4, minAoVolumeHeight);
+                aoZ1 = _mm_max_ps(aoZ1, minAoVolumeHeight);
+                aoZ2 = _mm_max_ps(aoZ2, minAoVolumeHeight);
+                aoZ3 = _mm_max_ps(aoZ3, minAoVolumeHeight);
+                aoZ4 = _mm_max_ps(aoZ4, minAoVolumeHeight);
 
                 // global coordinate's fracional part ([0, 255])
                 auto xyIF1 = _mm_sub_epi32(xyI1, _mm_slli_epi32(xyII1, 8));
