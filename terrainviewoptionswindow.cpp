@@ -15,9 +15,11 @@ TerrainViewOptionsWindow::TerrainViewOptionsWindow(TerrainView *view, QWidget *p
     const TerrainViewOptions &options = view->viewOptions();
     ui->altitudeColorCheck->setChecked(options.colorizeAltitude);
     ui->useEdgeCheck->setChecked(options.showEdges);
+    ui->aoCheck->setChecked(options.ambientOcclusion);
 
     connect(ui->altitudeColorCheck, SIGNAL(toggled(bool)), SLOT(updateOptions()));
     connect(ui->useEdgeCheck, SIGNAL(toggled(bool)), SLOT(updateOptions()));
+    connect(ui->aoCheck, SIGNAL(toggled(bool)), SLOT(updateOptions()));
 }
 
 TerrainViewOptionsWindow::~TerrainViewOptionsWindow()
@@ -30,5 +32,6 @@ void TerrainViewOptionsWindow::updateOptions()
     TerrainViewOptions options = view->viewOptions();
     options.colorizeAltitude = ui->altitudeColorCheck->isChecked();
     options.showEdges = ui->useEdgeCheck->isChecked();
+    options.ambientOcclusion = ui->aoCheck->isChecked();
     view->setViewOptions(options);
 }

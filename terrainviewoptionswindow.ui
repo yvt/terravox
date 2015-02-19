@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>159</width>
-    <height>58</height>
+    <height>79</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -31,6 +31,13 @@
     <widget class="QCheckBox" name="useEdgeCheck">
      <property name="text">
       <string>Edge</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="aoCheck">
+     <property name="text">
+      <string>Ambient Occlusion</string>
      </property>
     </widget>
    </item>

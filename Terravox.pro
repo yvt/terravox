@@ -42,7 +42,10 @@ SOURCES += main.cpp\
     effecteditor.cpp \
     erosioneffect.cpp \
     erosioneffectcontroller.cpp \
-    erosioneditor.cpp
+    erosioneditor.cpp \
+    terrainview_p.cpp \
+    terrainview_p_context.cpp \
+    terrainview_p_ao.cpp
 
 HEADERS  += mainwindow.h \
     brusheditor.h \
@@ -70,7 +73,8 @@ HEADERS  += mainwindow.h \
     effecteditor.h \
     erosioneffect.h \
     erosioneffectcontroller.h \
-    erosioneditor.h
+    erosioneditor.h \
+    terrainview_p.h
 
 FORMS    += mainwindow.ui \
     brusheditor.ui \

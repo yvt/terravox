@@ -123,7 +123,7 @@
           <string>Pan</string>
          </property>
          <property name="icon">
-          <iconset resource="../res/resources.qrc">
+          <iconset resource="res/resources.qrc">
            <normaloff>:/Terravox/toolPan.png</normaloff>:/Terravox/toolPan.png</iconset>
          </property>
          <property name="iconSize">
@@ -162,7 +162,7 @@
           <string>Raise</string>
          </property>
          <property name="icon">
-          <iconset resource="../res/resources.qrc">
+          <iconset resource="res/resources.qrc">
            <normaloff>:/Terravox/toolRaise.png</normaloff>:/Terravox/toolRaise.png</iconset>
          </property>
          <property name="iconSize">
@@ -191,7 +191,7 @@
           <string>Lower</string>
          </property>
          <property name="icon">
-          <iconset resource="../res/resources.qrc">
+          <iconset resource="res/resources.qrc">
            <normaloff>:/Terravox/toolLower.png</normaloff>:/Terravox/toolLower.png</iconset>
          </property>
          <property name="iconSize">
@@ -220,7 +220,7 @@
           <string>Paint</string>
          </property>
          <property name="icon">
-          <iconset resource="../res/resources.qrc">
+          <iconset resource="res/resources.qrc">
            <normaloff>:/Terravox/toolSmoothen.png</normaloff>:/Terravox/toolSmoothen.png</iconset>
          </property>
          <property name="iconSize">
@@ -259,7 +259,7 @@
           <string>Paint</string>
          </property>
          <property name="icon">
-          <iconset resource="../res/resources.qrc">
+          <iconset resource="res/resources.qrc">
            <normaloff>:/Terravox/toolPaint.png</normaloff>:/Terravox/toolPaint.png</iconset>
          </property>
          <property name="iconSize">
@@ -288,7 +288,7 @@
           <string>Paint</string>
          </property>
          <property name="icon">
-          <iconset resource="../res/resources.qrc">
+          <iconset resource="res/resources.qrc">
            <normaloff>:/Terravox/toolBlur.png</normaloff>:/Terravox/toolBlur.png</iconset>
          </property>
          <property name="iconSize">
@@ -525,7 +525,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../res/resources.qrc"/>
+  <include location="res/resources.qrc"/>
  </resources>
  <connections>
   <connection>

@@ -24,10 +24,12 @@ struct TerrainViewOptions
 {
     bool showEdges;
     bool colorizeAltitude;
+    bool ambientOcclusion;
 
     TerrainViewOptions() :
         showEdges(true),
-        colorizeAltitude(false)
+        colorizeAltitude(false),
+        ambientOcclusion(true)
     { }
 };
 
@@ -70,6 +72,7 @@ signals:
 
 public slots:
     void showOptionsWindow();
+    void terrainUpdate(const QRect &);
 
 private:
     struct SceneDefinition;

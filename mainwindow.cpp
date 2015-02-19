@@ -95,6 +95,8 @@ void MainWindow::setSession(QSharedPointer<Session> newSession)
     session = newSession;
     connect(session.data(), SIGNAL(terrainUpdated(QRect)),
             SLOT(terrainUpdated()));
+    connect(session.data(), SIGNAL(terrainUpdated(QRect)),
+            ui->terrainView, SLOT(terrainUpdate(QRect)));
     connect(session.data(), SIGNAL(toolChanged()),
             SLOT(toolChanged()));
 
@@ -109,6 +111,7 @@ void MainWindow::setSession(QSharedPointer<Session> newSession)
     ui->action_Redo->setEnabled(session->canRedo());
     connect(ui->action_Redo, SIGNAL(triggered()),
             session.data(), SLOT(redo()));
+
 
     ui->terrainView->setTerrain(session->terrain());
     session->setTool(currentTool);
