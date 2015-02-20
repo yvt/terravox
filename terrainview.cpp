@@ -59,6 +59,8 @@ void TerrainView::setViewOptions(const TerrainViewOptions &opt)
     Q_D(TerrainView);
     d->viewOptions = opt;
     update();
+
+    emit viewOptionsChanged(opt);
 }
 
 const TerrainViewOptions &TerrainView::viewOptions()

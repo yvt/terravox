@@ -20,6 +20,7 @@ public:
     QString name() override;
 private:
     QSharedPointer<BrushTool> tool;
+    QString settingsGroupName();
 };
 
 #endif // BRUSHTOOLCONTROLLER_H

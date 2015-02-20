@@ -5,6 +5,7 @@
 #include <QFile>
 #include <QDir>
 #include <QLabel>
+#include <QSharedPointer>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -32,9 +33,40 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow),
     currentToolEditor(nullptr),
     modified(false),
+    settings(new QSettings()),
     closeForced(false)
 {
     ui->setupUi(this);
+
+    // Application settings
+    ui->primaryColorView->setValue(settings->value("primaryColor", QColor(255, 255, 255)).value<QColor>());
+    connect(ui->primaryColorView, &ColorView::valueChanged, [&](QColor color) {
+        settings->setValue("primaryColor", color);
+    });
+
+    {
+        TerrainViewOptions options = ui->terrainView->viewOptions();
+        settings->beginGroup("terrainview");
+        options.ambientOcclusion = settings->value("ambientOcclusion", options.ambientOcclusion).value<bool>();
+        options.ambientOcclusionStrength =
+                settings->value("ambientOcclusionStrength", options.ambientOcclusionStrength).value<float>();
+        options.axises = settings->value("axises", options.axises).value<bool>();
+        options.colorizeAltitude = settings->value("colorizeAltitude", options.colorizeAltitude).value<bool>();
+        options.showEdges = settings->value("showEdges", options.showEdges).value<bool>();
+        settings->endGroup();
+        ui->terrainView->setViewOptions(options);
+
+        connect(ui->terrainView, &TerrainView::viewOptionsChanged, [&](TerrainViewOptions options) {
+            settings->beginGroup("terrainview");
+            settings->setValue("ambientOcclusion", options.ambientOcclusion);
+            settings->setValue("ambientOcclusionStrength", options.ambientOcclusionStrength);
+            settings->setValue("axises", options.axises);
+            settings->setValue("colorizeAltitude", options.colorizeAltitude);
+            settings->setValue("showEdges", options.showEdges);
+            settings->endGroup();
+        });
+    }
+
 
     // Connect color picker's signal
     connect(ui->primaryColorView, SIGNAL(clicked()),

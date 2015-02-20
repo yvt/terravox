@@ -111,4 +111,8 @@ public:
     const BrushToolParameters& parameters() const { return params; }
 };
 
+Q_DECLARE_METATYPE(BrushType)
+Q_DECLARE_METATYPE(BrushTipType)
+Q_DECLARE_METATYPE(BrushPressureMode)
+
 #endif // BRUSHTOOL_H

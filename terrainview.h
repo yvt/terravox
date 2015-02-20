@@ -80,6 +80,7 @@ signals:
     void clientEnter(QEvent *);
     void clientLeave(QEvent *);
     void terrainPaint(TerrainViewDrawingContext *);
+    void viewOptionsChanged(TerrainViewOptions);
 
 public slots:
     void showOptionsWindow();

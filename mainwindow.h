@@ -8,6 +8,7 @@
 #include <QScopedPointer>
 #include <QHash>
 #include <QToolButton>
+#include <QSettings>
 
 class Session;
 class ToolView;
@@ -31,6 +32,8 @@ public:
 
 private:
     Ui::MainWindow *ui;
+
+    QScopedPointer<QSettings> settings;
 
     QSharedPointer<Session> session;
     QString currentFilePath;
