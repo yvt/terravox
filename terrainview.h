@@ -26,12 +26,14 @@ struct TerrainViewOptions
     bool colorizeAltitude;
     bool ambientOcclusion;
     float ambientOcclusionStrength;
+    bool axises;
 
     TerrainViewOptions() :
         showEdges(true),
         colorizeAltitude(false),
         ambientOcclusion(true),
-        ambientOcclusionStrength(0.5f)
+        ambientOcclusionStrength(0.5f),
+        axises(true)
     { }
 };
 

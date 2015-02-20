@@ -17,11 +17,13 @@ TerrainViewOptionsWindow::TerrainViewOptionsWindow(TerrainView *view, QWidget *p
     ui->useEdgeCheck->setChecked(options.showEdges);
     ui->aoCheck->setChecked(options.ambientOcclusion);
     ui->aoSlider->setValue(options.ambientOcclusionStrength * 1000.f);
+    ui->axisesCheck->setChecked(options.axises);
 
     connect(ui->altitudeColorCheck, SIGNAL(toggled(bool)), SLOT(updateOptions()));
     connect(ui->useEdgeCheck, SIGNAL(toggled(bool)), SLOT(updateOptions()));
     connect(ui->aoCheck, SIGNAL(toggled(bool)), SLOT(updateOptions()));
     connect(ui->aoSlider, SIGNAL(valueChanged(int)), SLOT(updateOptions()));
+    connect(ui->axisesCheck, SIGNAL(toggled(bool)), SLOT(updateOptions()));
 }
 
 TerrainViewOptionsWindow::~TerrainViewOptionsWindow()
@@ -36,6 +38,7 @@ void TerrainViewOptionsWindow::updateOptions()
     options.showEdges = ui->useEdgeCheck->isChecked();
     options.ambientOcclusion = ui->aoCheck->isChecked();
     options.ambientOcclusionStrength = ui->aoSlider->value() / 1000.f;
+    options.axises = ui->axisesCheck->isChecked();
 
     view->setViewOptions(options);
 }

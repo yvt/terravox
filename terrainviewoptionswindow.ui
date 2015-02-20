@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>159</width>
-    <height>113</height>
+    <height>141</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -63,6 +63,13 @@
      </property>
      <property name="invertedControls">
       <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="axisesCheck">
+     <property name="text">
+      <string>Axises</string>
      </property>
     </widget>
    </item>

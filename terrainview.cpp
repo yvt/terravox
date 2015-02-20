@@ -99,6 +99,35 @@ void TerrainView::paintEvent(QPaintEvent *e)
     QPainter painter(this);
     painter.drawImage(0, 0, img);
 
+    if (d->viewOptions.axises) {
+        QPointF axisPos(40, size.height() - 50);
+        QPointF axisX(d->rightVector.x(), d->upVector.x());
+        QPointF axisY(d->rightVector.y(), d->upVector.y());
+        QPointF axisZ(d->rightVector.z(), d->upVector.z());
+        float axisLen = 18.f;
+
+        auto drawText = [&](QString text, QPointF origin, QPointF dir) {
+            dir *= 1.f / std::sqrt(dir.x() * dir.x() + dir.y() * dir.y());
+            origin += dir * 12.f;
+            QRectF r(origin.x() - 100.f, origin.y() - 100.f, 200.f, 200.f);
+            QTextOption opt;
+            opt.setAlignment(Qt::AlignCenter);
+            painter.drawText(r, text, opt);
+        };
+
+        painter.setPen(qRgb(0, 0, 255));
+        painter.drawLine(axisPos, axisPos + axisZ * axisLen);
+        drawText("Z", axisPos + axisZ * axisLen, axisZ);
+
+        painter.setPen(qRgb(255, 0, 0));
+        painter.drawLine(axisPos, axisPos + axisX * axisLen);
+        drawText("X", axisPos + axisX * axisLen, axisX);
+
+        painter.setPen(qRgb(0, 255, 0));
+        painter.drawLine(axisPos, axisPos + axisY * axisLen);
+        drawText("Y", axisPos + axisY * axisLen, axisY);
+    }
+
     emit clientPaint(e);
 }
 
