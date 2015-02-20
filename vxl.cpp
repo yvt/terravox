@@ -2,6 +2,7 @@
 #include "terrain.h"
 #include <QScopedPointer>
 #include <QString>
+#include <QApplication>
 
 namespace vxl
 {
@@ -55,7 +56,7 @@ namespace vxl
         }
 
         if (nonHeightField) {
-            retMessage = "Terrain cannot be represented as a height field. Hollow area was removed.";
+            retMessage = QApplication::translate("vxl", "Terrain cannot be represented as a height field. Hollow area was removed.");
         }
 
         return terrain.take();

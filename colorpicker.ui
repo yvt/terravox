@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string notr="true"/>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <property name="spacing">
@@ -73,7 +73,7 @@
        <item row="0" column="0">
         <widget class="LabelSlider" name="redLabel">
          <property name="text">
-          <string>R:</string>
+          <string notr="true">R:</string>
          </property>
          <property name="buddy">
           <cstring>redField</cstring>
@@ -99,7 +99,7 @@
        <item row="0" column="2">
         <widget class="LabelSlider" name="hueLabel">
          <property name="text">
-          <string>H:</string>
+          <string notr="true">H:</string>
          </property>
          <property name="buddy">
           <cstring>hueField</cstring>
@@ -125,7 +125,7 @@
        <item row="1" column="0">
         <widget class="LabelSlider" name="greenLabel">
          <property name="text">
-          <string>G:</string>
+          <string notr="true">G:</string>
          </property>
          <property name="buddy">
           <cstring>greenField</cstring>
@@ -151,7 +151,7 @@
        <item row="1" column="2">
         <widget class="LabelSlider" name="saturationLabel">
          <property name="text">
-          <string>S:</string>
+          <string notr="true">S:</string>
          </property>
          <property name="buddy">
           <cstring>saturationField</cstring>
@@ -177,7 +177,7 @@
        <item row="2" column="0">
         <widget class="LabelSlider" name="blueLabel">
          <property name="text">
-          <string>B:</string>
+          <string notr="true">B:</string>
          </property>
          <property name="buddy">
           <cstring>blueField</cstring>
@@ -203,7 +203,7 @@
        <item row="2" column="2">
         <widget class="LabelSlider" name="brightnessLabel">
          <property name="text">
-          <string>B:</string>
+          <string notr="true">B:</string>
          </property>
          <property name="buddy">
           <cstring>brightnessField</cstring>
@@ -264,7 +264,7 @@
        <item>
         <widget class="QLabel" name="hexLabel">
          <property name="text">
-          <string>#</string>
+          <string notr="true">#</string>
          </property>
          <property name="buddy">
           <cstring>hexValue</cstring>
@@ -274,7 +274,7 @@
        <item>
         <widget class="QLineEdit" name="hexValue">
          <property name="text">
-          <string>000000</string>
+          <string notr="true">000000</string>
          </property>
         </widget>
        </item>
@@ -289,15 +289,15 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>LabelSlider</class>
-   <extends>QLabel</extends>
-   <header>labelslider.h</header>
-  </customwidget>
-  <customwidget>
    <class>ColorView</class>
    <extends>QWidget</extends>
    <header>colorview.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>LabelSlider</class>
+   <extends>QLabel</extends>
+   <header>labelslider.h</header>
   </customwidget>
   <customwidget>
    <class>ColorModelView</class>

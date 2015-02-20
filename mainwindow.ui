@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string notr="true"/>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -83,7 +83,7 @@
           <string notr="true">font-style: italic</string>
          </property>
          <property name="text">
-          <string>TextLabel</string>
+          <string notr="true">TextLabel</string>
          </property>
         </widget>
        </item>

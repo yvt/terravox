@@ -46,9 +46,9 @@ bool EffectController::leave(std::function<void (bool)> callback)
 {
     Q_ASSERT(editor);
     QMessageBox *msgbox = new QMessageBox(
-                QMessageBox::NoIcon, "Terravox", "Effect is being edited.",
+                QMessageBox::NoIcon, QApplication::applicationName(), tr("Effect is being edited."),
                 QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel, editor->window());
-    msgbox->setInformativeText("Apply the effect?");
+    msgbox->setInformativeText(tr("Apply the effect?"));
     msgbox->setWindowFlags(Qt::Sheet);
     msgbox->setDefaultButton(QMessageBox::Save);
     msgbox->show();

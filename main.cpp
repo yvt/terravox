@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include <QApplication>
+#include <QTranslator>
+#include <QLibraryInfo>
 
 int main(int argc, char *argv[])
 {
@@ -30,6 +32,19 @@ int main(int argc, char *argv[])
     a.setPalette(darkPalette);
 
     a.setStyleSheet("*{font-size: 11px;} QToolTip { color: #ffffff; background-color: #2a82da; border: 1px solid white; }");
+
+    QTranslator qtTranslator;
+    qtTranslator.load("qt_" + QLocale::system().name(),
+            QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+    a.installTranslator(&qtTranslator);
+
+    QTranslator myappTranslator;
+    QString dir;
+#ifdef Q_OS_DARWIN
+    dir = QApplication::applicationDirPath() + "/../Resources";
+#endif
+    myappTranslator.load(QLocale::system(), "terravox_", QString(), dir);
+    a.installTranslator(&myappTranslator);
 
     MainWindow w;
     w.show();

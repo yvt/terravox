@@ -27,9 +27,9 @@ QString ManipulateToolController::name()
 {
     switch (mode_) {
     case ManipulateMode::Landform:
-        return "Manipulate";
+        return tr("Manipulate");
     case ManipulateMode::Color:
-        return "Paint";
+        return tr("Paint");
     default:
         Q_UNREACHABLE();
         return QString();

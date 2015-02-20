@@ -160,6 +160,7 @@
     <message>
         <location filename="mainwindow.ui" line="120"/>
         <location filename="mainwindow.ui" line="123"/>
+        <location filename="mainwindow.cpp" line="432"/>
         <source>Pan</source>
         <translation type="unfinished"></translation>
     </message>

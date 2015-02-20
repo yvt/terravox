@@ -161,12 +161,10 @@ void MainWindow::setSession(QSharedPointer<Session> newSession)
 
 void MainWindow::updateUI()
 {
-    QString appName = "Terravox";
-    if (currentFilePath.isEmpty()) {
-        setWindowTitle("Untitled[*] - " + appName);
-    } else {
-        setWindowTitle(QFileInfo(currentFilePath).fileName() + "[*] - " + appName);
-    }
+    QString appName = QApplication::applicationName();
+
+    setWindowTitle(tr("%2[*] - %1").arg(appName, currentFilePath.isEmpty() ? tr("Untitled") : QFileInfo(currentFilePath).fileName()));
+
     setWindowModified(modified);
 }
 
@@ -275,7 +273,7 @@ bool MainWindow::saveInteractive(std::function<void (bool)> callback)
     }
 
     QMessageBox *msgbox = new QMessageBox(
-                QMessageBox::Warning, "Terravox", "Could not save file.",
+                QMessageBox::Warning, QApplication::applicationName(), tr("Could not save file."),
                 QMessageBox::Ok, this);
     msgbox->setInformativeText(error);
     msgbox->setWindowFlags(Qt::Sheet);
@@ -290,8 +288,8 @@ bool MainWindow::saveInteractive(std::function<void (bool)> callback)
 
 void MainWindow::saveAsInteractive(std::function<void (bool)> callback)
 {
-    QString fn = QFileDialog::getSaveFileName(this, "Save As", currentFilePath,
-                                              "Voxlap5 512x512x64 VXL (*.vxl)");
+    QString fn = QFileDialog::getSaveFileName(this, tr("Save As"), currentFilePath,
+                                              tr("Voxlap5 512x512x64 VXL (*.vxl)"));
 
     if (fn.isEmpty()) {
         callback(false);
@@ -300,7 +298,7 @@ void MainWindow::saveAsInteractive(std::function<void (bool)> callback)
 
     auto showError = [&](QString msg) {
         QMessageBox *msgbox = new QMessageBox(
-                    QMessageBox::Warning, "Error", "Could not save file.",
+                    QMessageBox::Warning, QApplication::applicationName(), tr("Could not save file."),
                     QMessageBox::Ok, this);
         msgbox->setWindowFlags(Qt::Sheet);
         msgbox->setInformativeText(msg);
@@ -326,7 +324,7 @@ bool MainWindow::saveTo(const QString &path, QString &error)
 {
     QByteArray bytes;
     if (!vxl::save(bytes, session->terrain().data())) {
-        error = "Failed to encode VXL data.";
+        error = tr("Failed to encode VXL data.");
         return false;
     }
 
@@ -353,9 +351,9 @@ bool MainWindow::confirmClose(std::function<void(bool)> callback)
         }
 
         QMessageBox *msgbox = new QMessageBox(
-                    QMessageBox::Warning, "Terravox", "Terrain has been changed.",
+                    QMessageBox::Warning, QApplication::applicationName(), tr("Terrain has been changed."),
                     QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel, this);
-        msgbox->setInformativeText("Do you want to save the terrain?");
+        msgbox->setInformativeText(tr("Do you want to save the terrain?"));
         msgbox->setWindowFlags(Qt::Sheet);
         msgbox->setDefaultButton(QMessageBox::Save);
         msgbox->show();
@@ -431,7 +429,7 @@ void MainWindow::toolChanged()
         currentToolEditor = new EmptyToolEditor();
 
     // tool name label
-    QString toolName = "Pan";
+    QString toolName = tr("Pan");
     if (session->tool()) {
         toolName = session->tool()->name();
     }
@@ -462,14 +460,14 @@ void MainWindow::on_actionAbout_Qt_triggered()
 
 void MainWindow::on_actionAbout_triggered()
 {
-    QMessageBox::about(this, "About Terravox", "Terravox (version unknown)");
+    QMessageBox::about(this, tr("About Terravox"), tr("Terravox (version %1)").arg(tr("unknown")));
 }
 
 void MainWindow::on_actionOpen_triggered()
 {
     auto doAction = [=]() {
-        QString fn = QFileDialog::getOpenFileName(this, "Open",
-            QString(), "Voxlap5 512x512x64 VXL (*.vxl)");
+        QString fn = QFileDialog::getOpenFileName(this, tr("Open"),
+            QString(), tr("Voxlap5 512x512x64 VXL (*.vxl)"));
         if (fn.isEmpty())
         {
             return;
@@ -477,7 +475,7 @@ void MainWindow::on_actionOpen_triggered()
 
         auto showError = [&](QString msg) {
             QMessageBox *msgbox = new QMessageBox(
-                        QMessageBox::Warning, "Error", "Could not open file.",
+                        QMessageBox::Warning, QApplication::applicationName(), tr("Could not open file."),
                         QMessageBox::Ok, this);
             msgbox->setWindowFlags(Qt::Sheet);
             msgbox->setInformativeText(msg);
@@ -514,7 +512,7 @@ void MainWindow::on_actionOpen_triggered()
             updateUI();
 
             QMessageBox *msgbox = new QMessageBox(
-                        QMessageBox::Warning, "Warning", "File could be opened successfully, but there was a problem.",
+                        QMessageBox::Warning, QApplication::applicationName(), tr("File could be opened successfully, but there was a problem."),
                         QMessageBox::Ok,
                         this);
             msgbox->setWindowFlags(Qt::Sheet);

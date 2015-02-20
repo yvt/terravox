@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="ja_JP">
+<TS version="2.1" language="ja_JP">
 <context>
     <name>BrushEditor</name>
     <message>
@@ -160,6 +160,7 @@
     <message>
         <location filename="mainwindow.ui" line="120"/>
         <location filename="mainwindow.ui" line="123"/>
+        <location filename="mainwindow.cpp" line="432"/>
         <source>Pan</source>
         <translation>パン</translation>
     </message>
@@ -284,7 +285,7 @@
     <message>
         <location filename="mainwindow.ui" line="511"/>
         <source>&amp;Preferences</source>
-        <translation>環境設定(&amp;P)...</translation>
+        <translation>環境設定(&amp;P)</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="516"/>

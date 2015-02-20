@@ -93,3 +93,6 @@ FORMS    += mainwindow.ui \
 
 RESOURCES += \
     res/resources.qrc
+
+TRANSLATIONS = terravox_en.ts
+TRANSLATIONS += terravox_ja.ts

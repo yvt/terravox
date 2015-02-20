@@ -119,11 +119,11 @@ ToolView *BrushToolController::createView(Session *session, TerrainView *terrain
 QString BrushToolController::name()
 {
     switch (tool->type()) {
-    case BrushType::Raise: return "Raise";
-    case BrushType::Lower: return "Lower";
-    case BrushType::Paint: return "Paint Brush";
-    case BrushType::Smoothen: return "Smoothen";
-    case BrushType::Blur: return "Blur";
+    case BrushType::Raise: return tr("Raise");
+    case BrushType::Lower: return tr("Lower");
+    case BrushType::Paint: return tr("Paint Brush");
+    case BrushType::Smoothen: return tr("Smoothen");
+    case BrushType::Blur: return tr("Blur");
     default: Q_UNREACHABLE(); return QString();
     }
 }
