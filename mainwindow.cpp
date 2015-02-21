@@ -11,6 +11,7 @@
 #include "ui_mainwindow.h"
 #include <QHBoxLayout>
 #include "session.h"
+#include "luaengine.h"
 #include "colorpickerwindow.h"
 #include "colorpicker.h"
 #include "colorsamplerview.h"
@@ -114,6 +115,19 @@ MainWindow::MainWindow(QWidget *parent) :
     colorSampler.reset(new ColorSamplerView(ui->terrainView));
     connect(colorSampler.data(), SIGNAL(sampled(QColor)),
             ui->primaryColorView, SLOT(setValue(QColor)));
+
+    lua.reset(new LuaEngine());
+    connect(lua.data(), &LuaEngine::error, [&](const QString &error)
+    {
+        QMessageBox *msgbox = new QMessageBox(
+                    QMessageBox::Warning, QApplication::applicationName(), tr("Error occured in a plugin or the plugin system."),
+                    QMessageBox::Ok, this);
+        msgbox->setWindowFlags(Qt::Sheet);
+        msgbox->setInformativeText(error);
+        connect(msgbox, SIGNAL(finished(int)), msgbox, SLOT(deleteLater()));
+        msgbox->show();
+    });
+    lua->initialize();
 
     QSharedPointer<Session> s = QSharedPointer<Session>::create();
     s->setTerrain(QSharedPointer<Terrain>(TerrainGenerator(QSize(512, 512)).generateRandomLandform()));

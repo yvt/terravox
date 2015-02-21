@@ -22,6 +22,8 @@ class EffectController;
 class ColorPickerWindow;
 class ColorSamplerView;
 
+class LuaEngine;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -34,6 +36,8 @@ private:
     Ui::MainWindow *ui;
 
     QScopedPointer<QSettings> settings;
+
+    QScopedPointer<LuaEngine> lua;
 
     QSharedPointer<Session> session;
     QString currentFilePath;

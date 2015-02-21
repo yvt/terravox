@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ja_JP">
+<TS version="2.0" language="ja_JP">
 <context>
     <name>BrushEditor</name>
     <message>
@@ -156,11 +156,35 @@
     </message>
 </context>
 <context>
+    <name>LuaEnginePrivate</name>
+    <message>
+        <location filename="luaengine_p.cpp" line="85"/>
+        <source>(unknown)</source>
+        <translation>(不明)</translation>
+    </message>
+    <message>
+        <location filename="luaengine_p.cpp" line="46"/>
+        <source>Fail to start LuaJIT.</source>
+        <translation>LuaJITを開始できませんでした。</translation>
+    </message>
+    <message>
+        <location filename="luaengine_p.cpp" line="58"/>
+        <location filename="luaengine_p.cpp" line="67"/>
+        <source>Fail to start LuaJIT main script.</source>
+        <translation>LuaJITのメインスクリプトを開始できませんでした。</translation>
+    </message>
+    <message>
+        <location filename="luaengine_p.cpp" line="68"/>
+        <source>(no information available)</source>
+        <translation>(利用可能な情報はありません)</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <location filename="mainwindow.ui" line="120"/>
         <location filename="mainwindow.ui" line="123"/>
-        <location filename="mainwindow.cpp" line="432"/>
+        <location filename="mainwindow.cpp" line="446"/>
         <source>Pan</source>
         <translation>パン</translation>
     </message>
@@ -208,7 +232,7 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="394"/>
-        <location filename="mainwindow.cpp" line="607"/>
+        <location filename="mainwindow.cpp" line="621"/>
         <source>Primary Color</source>
         <translation>主カラー</translation>
     </message>
@@ -343,74 +367,79 @@
         <translation>侵食(&amp;E)...</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="166"/>
+        <location filename="mainwindow.cpp" line="123"/>
+        <source>Error occured in a plugin or the plugin system.</source>
+        <translation>プラグインまたはプラグインシステムでエラーが発生しました。</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="180"/>
         <source>%2[*] - %1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="166"/>
+        <location filename="mainwindow.cpp" line="180"/>
         <source>Untitled</source>
         <translation>無題</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="276"/>
-        <location filename="mainwindow.cpp" line="301"/>
+        <location filename="mainwindow.cpp" line="290"/>
+        <location filename="mainwindow.cpp" line="315"/>
         <source>Could not save file.</source>
         <translation>ファイルを保存できませんでした。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="291"/>
+        <location filename="mainwindow.cpp" line="305"/>
         <source>Save As</source>
         <translation>名前を付けて保存</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="292"/>
-        <location filename="mainwindow.cpp" line="470"/>
+        <location filename="mainwindow.cpp" line="306"/>
+        <location filename="mainwindow.cpp" line="484"/>
         <source>Voxlap5 512x512x64 VXL (*.vxl)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="327"/>
+        <location filename="mainwindow.cpp" line="341"/>
         <source>Failed to encode VXL data.</source>
         <translation>VXLデータのエンコードに失敗しました。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="354"/>
+        <location filename="mainwindow.cpp" line="368"/>
         <source>Terrain has been changed.</source>
         <translation>地形は変更されています。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="356"/>
+        <location filename="mainwindow.cpp" line="370"/>
         <source>Do you want to save the terrain?</source>
         <translation>地形を保存しますか?</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="463"/>
+        <location filename="mainwindow.cpp" line="477"/>
         <source>About Terravox</source>
         <translation>Terravoxについて</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="463"/>
+        <location filename="mainwindow.cpp" line="477"/>
         <source>Terravox (version %1)</source>
         <translation>Terravox (バージョン %1)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="463"/>
+        <location filename="mainwindow.cpp" line="477"/>
         <source>unknown</source>
         <translation>不明</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="469"/>
+        <location filename="mainwindow.cpp" line="483"/>
         <source>Open</source>
         <translation>開く</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="478"/>
+        <location filename="mainwindow.cpp" line="492"/>
         <source>Could not open file.</source>
         <translation>ファイルを開けませんでした。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="515"/>
+        <location filename="mainwindow.cpp" line="529"/>
         <source>File could be opened successfully, but there was a problem.</source>
         <translation>ファイルを開くことは成功しましたが、問題があります。</translation>
     </message>

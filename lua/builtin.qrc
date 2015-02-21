@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/TerravoxLua">
+        <file>host.lua</file>
+        <file>main.lua</file>
+        <file>terrain.lua</file>
+        <file>api.h</file>
+    </qresource>
+</RCC>

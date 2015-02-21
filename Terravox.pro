@@ -48,7 +48,9 @@ SOURCES += main.cpp\
     terrainview_p_ao.cpp \
     colorsamplerview.cpp \
     manipulatetoolcontroller.cpp \
-    manipulatetoolview.cpp
+    manipulatetoolview.cpp \
+    luaengine.cpp \
+    luaengine_p.cpp
 
 HEADERS  += mainwindow.h \
     brusheditor.h \
@@ -80,7 +82,10 @@ HEADERS  += mainwindow.h \
     terrainview_p.h \
     colorsamplerview.h \
     manipulatetoolcontroller.h \
-    manipulatetoolview.h
+    manipulatetoolview.h \
+    luaengine.h \
+    luaengine_p.h \
+    lua/api.h
 
 FORMS    += mainwindow.ui \
     brusheditor.ui \
@@ -92,7 +97,22 @@ FORMS    += mainwindow.ui \
     erosioneditor.ui
 
 RESOURCES += \
-    res/resources.qrc
+    res/resources.qrc \
+    lua/builtin.qrc
 
 TRANSLATIONS = terravox_en.ts
 TRANSLATIONS += terravox_ja.ts
+
+CONFIG += link_pkgconfig
+QT_CONFIG -= no-pkg-config
+#   packagesExist(luajit)  { # doesn't work in Qt5
+system(pkg-config luajit) {
+    PKGCONFIG += luajit
+    DEFINES += HAS_LUAJIT
+    mac { # LuaJIT has issues with x86_64 OS X
+        QMAKE_LFLAGS += -pagezero_size 10000 -image_base 100000000
+    }
+} else {
+    warning(Project will be built without LuaJIT support.)
+}
+# TODO: support LuaJIT on Windows
