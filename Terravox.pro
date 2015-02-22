@@ -105,6 +105,7 @@ RESOURCES += \
 TRANSLATIONS = terravox_en.ts
 TRANSLATIONS += terravox_ja.ts
 
+# Link LuaJIT
 CONFIG += link_pkgconfig
 QT_CONFIG -= no-pkg-config
 #   packagesExist(luajit)  { # doesn't work in Qt5
@@ -118,3 +119,11 @@ system(pkg-config luajit) {
     warning(Project will be built without LuaJIT support.)
 }
 # TODO: support LuaJIT on Windows
+
+# Add example scripts
+mac {
+    ScriptFiles.files = scripts
+    ScriptFiles.path =
+    QMAKE_BUNDLE_DATA += ScriptFiles
+}
+# TODO: install example scripts on Windows/Linux
