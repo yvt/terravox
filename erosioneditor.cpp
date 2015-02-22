@@ -9,12 +9,15 @@ ErosionEditor::ErosionEditor(ErosionEffect *fx, QWidget *parent) :
 {
     ui->setupUi(this);
 
+    loadParameters();
+
     connect(fx, SIGNAL(parameterChanged(ErosionParameters)), SLOT(loadParameters()));
     connect(ui->strengthField, SIGNAL(valueChanged(int)), SLOT(storeParameters()));
     connect(ui->densityField, SIGNAL(valueChanged(int)), SLOT(storeParameters()));
 
     ui->strengthLabel->bindSpinBox(ui->strengthField);
     ui->densityLabel->bindSpinBox(ui->densityField);
+
 }
 
 ErosionEditor::~ErosionEditor()
