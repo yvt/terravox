@@ -11,6 +11,7 @@
 
 typedef void *Host;
 
+typedef void *SettingsHandle;
 typedef void *TerrainHandle;
 typedef void *TerrainEditHandle;
 
@@ -43,6 +44,11 @@ struct TerravoxApi
     Host host;
 
     void (*aboutQt)(); // just for testing...
+
+    SettingsHandle (*settingsOpen)(const char *group);
+    void (*settingsClose)(SettingsHandle);
+    const char *(*settingsGetValue)(SettingsHandle, const char *name);
+    void (*settingsSetValue)(SettingsHandle, const char *name, const char *value);
 
     TerrainHandle (*terrainCreate)(int width, int height);
     float *(*terrainGetLandformData)(TerrainHandle);

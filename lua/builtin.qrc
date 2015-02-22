@@ -8,5 +8,7 @@
         <file>terrainedit.lua</file>
         <file>tooleditor.lua</file>
         <file>lclass.lua</file>
+        <file>json.lua</file>
+        <file>settings.lua</file>
     </qresource>
 </RCC>

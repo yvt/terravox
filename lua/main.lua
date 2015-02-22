@@ -13,6 +13,7 @@ require "terravox.host"
 require "terravox.terrain"
 -- terravox.terrain.Terrain(512, 512)
 
+require "terravox.settings"
 require "terravox.effect"
 require "terravox.tooleditor"
 require "lclass"
@@ -20,8 +21,9 @@ require "lclass"
 class "TestEffect" (terravox.effect.EffectController) 
 function TestEffect:TestEffect()
   terravox.effect.EffectController.EffectController(self)
-  self.bias = 0
-  self.scale = 1
+  self.settings = terravox.settings.groups["org.terraworks.leveladjustment"]
+  self.bias = self.settings.bias or 0
+  self.scale = self.settings.scale or 1
 end
 function TestEffect:createEditor()
   local editor = terravox.tooleditor.ToolEditor()
@@ -30,6 +32,7 @@ function TestEffect:createEditor()
   biasSlider:setValue(self.bias)
   biasSlider.onchange = function(sender)
     self.bias = sender:getValue()
+    self.settings.bias = self.bias
     self:preview()
   end
 
@@ -37,6 +40,7 @@ function TestEffect:createEditor()
   scaleSlider:setValue(self.scale)
   scaleSlider.onchange = function(sender)
     self.scale = sender:getValue()
+    self.settings.scale = self.scale
     self:preview()
   end
 
@@ -58,4 +62,4 @@ function TestEffect:apply(edit)
   -- quantization is done automatically
 end
 
-terravox.effect.registerEffect("Global Adjustment", TestEffect)
+terravox.effect.registerEffect("Level Adjustment", TestEffect)

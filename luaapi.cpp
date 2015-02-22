@@ -12,6 +12,7 @@
 #include <QDoubleSpinBox>
 #include "effectcontroller.h"
 #include <QDebug>
+#include <QSettings>
 
 struct ToolEditor
 {
@@ -180,6 +181,10 @@ static LuaHost *toHost(Host host)
 {
     return reinterpret_cast<LuaHost *>(host);
 }
+static QSettings *fromSettingsHandle(SettingsHandle h)
+{
+    return reinterpret_cast<QSettings *>(h);
+}
 
 class LuaEffectController : public EffectController
 {
@@ -263,6 +268,32 @@ LuaScriptInterface::LuaScriptInterface(LuaInterface *interface, std::function<bo
             }
         });
     };
+
+    // Setttings API
+    api.settingsOpen = [](const char *group) -> SettingsHandle {
+        auto *settings = new QSettings();
+        settings->beginGroup(group);
+        return reinterpret_cast<SettingsHandle>(settings);
+    };
+    api.settingsClose = [](SettingsHandle h) -> void {
+        delete fromSettingsHandle(h);
+    };
+    api.settingsSetValue = [](SettingsHandle h, const char *name, const char *value) -> void {
+        auto *settings = fromSettingsHandle(h);;
+        settings->setValue(name, value);
+    };
+
+    api.settingsGetValue = [](SettingsHandle h, const char *name) -> const char * {
+        auto *settings = fromSettingsHandle(h);
+        auto v = settings->value(name);
+        static QByteArray buffer;
+        if (v.isNull())
+            buffer.clear();
+        else
+            buffer = v.toString().toUtf8(); // FIXME: this isn't thread safe
+        return buffer.data();
+    };
+
 
     // Terrain API
     api.terrainCreate = [](int width, int height) -> TerrainHandle {

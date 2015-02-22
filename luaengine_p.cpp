@@ -13,7 +13,8 @@ static int QtResourceSearcher(lua_State *lua)
 {
     // check module name prefix
     QString moduleName(luaL_checkstring(lua, 1));
-    if (moduleName == "lclass") {
+    if (moduleName == "lclass" ||
+        moduleName == "json") {
         // lclass is an external library, so no prefix needed
         moduleName.prepend("terravox.");
     }
