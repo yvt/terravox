@@ -481,11 +481,12 @@ void MainWindow::toolChanged()
     if (currentToolEditor)
         layout->addWidget(currentToolEditor, 1);
 
-
     if (session->tool())
         currentToolView = QSharedPointer<ToolView>(session->tool()->createView(session.data(), ui->terrainView));
     else
         currentToolView.reset();
+
+    ui->terrainView->update();
 
     updateUIToolSelection();
 }
