@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QString>
 #include <functional>
+#include <QStringList>
 
 class EffectController;
 
@@ -32,7 +33,8 @@ public:
 
     void initialize(LuaInterface *i);
 
-    QString pluginDirectory();
+    // FIXME: move plugin-related stuffs to a separate module (like PluginManager)
+    QStringList pluginDirectories(bool writable);
 signals:
     void error(QString);
 
@@ -51,7 +53,7 @@ public:
 
     void initialize(LuaInterface *) { }
 
-    QString pluginDirectory() { return QString(); }
+    QStringList pluginDirectories(bool writable) { return QStringList(); }
 signals:
     void error(QString);
 

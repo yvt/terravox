@@ -6,6 +6,7 @@
 #include <QDir>
 #include <QLabel>
 #include <QSharedPointer>
+#include <QDesktopServices>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -679,4 +680,41 @@ void MainWindow::primaryColorEdited()
 void MainWindow::on_action_Erosion_triggered()
 {
     startEffectInstanceInterractive(QSharedPointer<ErosionEffectController>::create());
+}
+
+void MainWindow::on_actionOpenPluginsFolder_triggered()
+{
+    QStringList dirs = lua->pluginDirectories(true);
+    if (dirs.isEmpty()) {
+        QMessageBox *msgbox = new QMessageBox(
+                    QMessageBox::Warning, QApplication::applicationName(), tr("Cannot open the plugins folder."),
+                    QMessageBox::Ok, this);
+        msgbox->setWindowFlags(Qt::Sheet);
+        msgbox->setInformativeText(tr("Could not determine a writable plugins folder."));
+        connect(msgbox, &QMessageBox::finished, [=]() mutable {msgbox->deleteLater();});
+        msgbox->show();
+        return;
+    }
+
+    QString dir = dirs[0];
+    if (!QDir().mkpath(dir)) {
+        QMessageBox *msgbox = new QMessageBox(
+                    QMessageBox::Warning, QApplication::applicationName(), tr("Cannot open the plugins folder."),
+                    QMessageBox::Ok, this);
+        msgbox->setWindowFlags(Qt::Sheet);
+        msgbox->setInformativeText(tr("Could not create the plugins folder at '%1'.").arg(dir));
+        connect(msgbox, &QMessageBox::finished, [=]() mutable {msgbox->deleteLater();});
+        msgbox->show();
+        return;
+    }
+
+    if (!QDesktopServices::openUrl(QUrl::fromLocalFile(dir))) {
+        QMessageBox *msgbox = new QMessageBox(
+                    QMessageBox::Warning, QApplication::applicationName(), tr("Cannot open the plugins folder."),
+                    QMessageBox::Ok, this);
+        msgbox->setWindowFlags(Qt::Sheet);
+        msgbox->setInformativeText(tr("Failed to launch the file manager to show '%1'.").arg(dir));
+        connect(msgbox, &QMessageBox::finished, [=]() mutable {msgbox->deleteLater();});
+        msgbox->show();
+    }
 }

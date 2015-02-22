@@ -442,6 +442,8 @@
     <property name="title">
      <string>&amp;Tools</string>
     </property>
+    <addaction name="actionOpenPluginsFolder"/>
+    <addaction name="separator"/>
     <addaction name="action_Preferences"/>
    </widget>
    <widget class="QMenu" name="menu_View">
@@ -564,6 +566,11 @@
   <action name="action_Erosion">
    <property name="text">
     <string>&amp;Erosion...</string>
+   </property>
+  </action>
+  <action name="actionOpenPluginsFolder">
+   <property name="text">
+    <string>Open Pluigns Folder</string>
    </property>
   </action>
  </widget>

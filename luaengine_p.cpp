@@ -8,6 +8,10 @@
 #include <QApplication>
 #include <QSharedPointer>
 #include "luaapi.h"
+#include <QDir>
+#include <QDebug>
+
+static QStringList pluginsDirectoryPrefix;
 
 static int QtResourceSearcher(lua_State *lua)
 {
@@ -18,18 +22,25 @@ static int QtResourceSearcher(lua_State *lua)
         // lclass is an external library, so no prefix needed
         moduleName.prepend("terravox.");
     }
-    if (!moduleName.startsWith("terravox.")) {
-        lua_pushnil(lua);
-        return 1;
-    }
-
-    bool isApiFile = moduleName == "terravox.api";
 
     // try loading corresponding file
     QString path = moduleName;
+    bool isApiFile = moduleName == "terravox.api";
+
     path.replace('.', '/');
     path += isApiFile ? ".h" : ".lua";
-    path = ":/TerravoxLua/" + path.mid(9);
+
+    if (moduleName.startsWith("terravox.")) {
+        path = ":/TerravoxLua/" + path.mid(9);
+    } else {
+        foreach (const QString &prefix, pluginsDirectoryPrefix) {
+            path = prefix + "/" + path;
+            if (QFile(path).exists()) {
+                break;
+            }
+        }
+    }
+
     QFile file(path);
     if (!file.open(QIODevice::ReadOnly)) {
         lua_pushstring(lua, (path + ": " + file.errorString()).toUtf8().data());
@@ -79,6 +90,7 @@ void LuaEnginePrivate::initialize(LuaInterface *i)
     luaL_openlibs(lua);
 
     // add searcher
+    pluginsDirectoryPrefix = q->pluginDirectories(false);
     lua_pushcfunction(lua, &QtResourceSearcher);
     lua_setglobal(lua, "__qsearcher");
 
@@ -112,6 +124,47 @@ void LuaEnginePrivate::initialize(LuaInterface *i)
     if (!callProtected(0, 0)) {
         return;
     }
+
+    // load plugins
+    QStringList pluginsDirs = q->pluginDirectories(false);
+    foreach (const QString &pluginsDirPath, pluginsDirs) {
+        qDebug() << "Scanning: " << pluginsDirPath;
+        QDir pluginsDir(pluginsDirPath);
+        if (pluginsDir.exists()) {
+            QStringList errors;
+            foreach (const QString& ent, pluginsDir.entryList(QDir::Dirs|QDir::Readable)) {
+                if (ent.startsWith('.')) {
+                    continue;
+                }
+                if (ent.contains('.')) {
+                    qDebug() << "Invalid plugin name " << ent;
+                    continue;
+                }
+                QDir pluginDir(pluginsDir.path() + "/" + ent);
+                QString mainFilePath = pluginDir.path() + "/main.lua";
+                QFile mainFile(mainFilePath);
+                if (!mainFile.isReadable()) {
+                    qDebug() << "Plugin main file " << mainFilePath << " is not readable.";
+                    continue;
+                }
+
+                QString mainModule = ent + ".main";
+                lua_getglobal(lua, "require");
+                lua_pushstring(lua, mainModule.toUtf8().data());
+
+                int ret = lua_pcall(lua, 1, 0, 0);
+                if (ret) {
+                    // fail
+                    const char *msg = luaL_checkstring(lua, -1);
+                    errors.push_back(ent + " : " + (msg ? msg : tr("(unknown)")));
+                }
+            }
+            if (!errors.empty()) {
+                emit q->error(tr("One or more plugins failed to load.\n\n%1").arg(errors.join("\n\n")));
+            }
+        }
+    }
+
 
 }
 

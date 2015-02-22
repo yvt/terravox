@@ -97,6 +97,7 @@ private slots:
     void primaryColorEdited();
     void effectDone();
     void on_action_Erosion_triggered();
+    void on_actionOpenPluginsFolder_triggered();
 };
 
 #endif // MAINWINDOW_H
