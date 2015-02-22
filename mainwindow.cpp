@@ -550,6 +550,7 @@ void MainWindow::on_actionOpen_triggered()
         setSession(s);
 
         if (!msgOut.isEmpty()) {
+            modified = true;
             currentFilePath = ""; // overwriting would result in loss
             updateUI();
 
@@ -562,6 +563,7 @@ void MainWindow::on_actionOpen_triggered()
             connect(msgbox, &QMessageBox::finished, [=]() mutable {msgbox->deleteLater();});
             msgbox->show();
         } else {
+            modified = false;
             currentFilePath = fn;
             updateUI();
         }
