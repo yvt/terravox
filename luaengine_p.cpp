@@ -33,8 +33,9 @@ static int QtResourceSearcher(lua_State *lua)
     if (moduleName.startsWith("terravox.")) {
         path = ":/TerravoxLua/" + path.mid(9);
     } else {
+        auto origPath = path;
         foreach (const QString &prefix, pluginsDirectoryPrefix) {
-            path = prefix + "/" + path;
+            path = prefix + "/" + origPath;
             if (QFile(path).exists()) {
                 break;
             }
@@ -43,7 +44,7 @@ static int QtResourceSearcher(lua_State *lua)
 
     QFile file(path);
     if (!file.open(QIODevice::ReadOnly)) {
-        lua_pushstring(lua, (path + ": " + file.errorString()).toUtf8().data());
+        lua_pushstring(lua, ("\n" + path + ": " + file.errorString()).toUtf8().data());
         return 1;
     }
 
@@ -143,8 +144,8 @@ void LuaEnginePrivate::initialize(LuaInterface *i)
                 QDir pluginDir(pluginsDir.path() + "/" + ent);
                 QString mainFilePath = pluginDir.path() + "/main.lua";
                 QFile mainFile(mainFilePath);
-                if (!mainFile.isReadable()) {
-                    qDebug() << "Plugin main file " << mainFilePath << " is not readable.";
+                if (!mainFile.exists()) {
+                    qDebug() << "Plugin main file " << mainFilePath << " does not exist.";
                     continue;
                 }
 

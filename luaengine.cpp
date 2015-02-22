@@ -35,6 +35,7 @@ QStringList LuaEngine::pluginDirectories(bool writable)
         QString path = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
         if (!path.isEmpty()) {
             QString p = path + "/Scripts";
+            p = p.replace(QRegExp("\\/+"), "/");
             ret.push_back(p);
         }
     } else {
@@ -44,6 +45,7 @@ QStringList LuaEngine::pluginDirectories(bool writable)
             if (included.contains(p)) {
                 continue;
             }
+            p = p.replace(QRegExp("\\/+"), "/");
             ret.push_back(p);
             included[p] = true;
         }
