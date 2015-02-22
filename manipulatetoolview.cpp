@@ -50,6 +50,7 @@ void ManipulateToolView::clientMousePressed(QMouseEvent *e)
             dragStartHeight = session->terrain()->landform(pos.x(), pos.y());
             if (mode == ManipulateMode::Landform)
                 view->addCursorOverride(&cursor);
+            clientMouseMoved(e);
         }
         e->accept();
     }
