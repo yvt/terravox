@@ -123,7 +123,7 @@ system(pkg-config luajit) {
 # Add example scripts
 mac {
     ScriptFiles.files = scripts
-    ScriptFiles.path =
+    ScriptFiles.path = Contents/Resources
     QMAKE_BUNDLE_DATA += ScriptFiles
 }
 # TODO: install example scripts on Windows/Linux

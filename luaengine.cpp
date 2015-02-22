@@ -4,6 +4,7 @@
 #include <QApplication>
 #include <QStandardPaths>
 #include <QHash>
+#include <QDir>
 
 #ifdef HAS_LUAJIT
 
@@ -49,6 +50,20 @@ QStringList LuaEngine::pluginDirectories(bool writable)
             ret.push_back(p);
             included[p] = true;
         }
+#ifdef Q_OS_DARWIN
+        // Add bundled script
+        // (actually QStandardPaths::AppLocalDataLocation contains it, but strangely it's
+        //  percent encoded.)
+        {
+            QString p = QApplication::applicationDirPath() + "/../Resources/scripts";
+            p = QDir(p).absolutePath();
+            if (!included.contains(p)) {
+                p = p.replace(QRegExp("\\/+"), "/");
+                ret.push_back(p);
+                included[p] = true;
+            }
+        }
+#endif
     }
 
     return ret;
