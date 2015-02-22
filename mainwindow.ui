@@ -570,7 +570,7 @@
   </action>
   <action name="actionOpenPluginsFolder">
    <property name="text">
-    <string>Open Pluigns Folder</string>
+    <string>Open Scripts Folder</string>
    </property>
   </action>
  </widget>

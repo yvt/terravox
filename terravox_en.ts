@@ -158,30 +158,30 @@
 <context>
     <name>LuaEnginePrivate</name>
     <message>
-        <location filename="luaengine_p.cpp" line="159"/>
-        <location filename="luaengine_p.cpp" line="179"/>
-        <location filename="luaengine_p.cpp" line="199"/>
+        <location filename="luaengine_p.cpp" line="160"/>
+        <location filename="luaengine_p.cpp" line="180"/>
+        <location filename="luaengine_p.cpp" line="200"/>
         <source>(unknown)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="luaengine_p.cpp" line="78"/>
+        <location filename="luaengine_p.cpp" line="79"/>
         <source>Fail to start LuaJIT.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="luaengine_p.cpp" line="111"/>
-        <location filename="luaengine_p.cpp" line="120"/>
+        <location filename="luaengine_p.cpp" line="112"/>
+        <location filename="luaengine_p.cpp" line="121"/>
         <source>Fail to start LuaJIT main script.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="luaengine_p.cpp" line="121"/>
+        <location filename="luaengine_p.cpp" line="122"/>
         <source>(no information available)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="luaengine_p.cpp" line="163"/>
+        <location filename="luaengine_p.cpp" line="164"/>
         <source>One or more plugins failed to load.
 
 %1</source>
@@ -377,7 +377,8 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="573"/>
-        <source>Open Pluigns Folder</source>
+        <source>Open Scripts Folder</source>
+        <oldsource>Open Pluigns Folder</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
