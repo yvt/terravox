@@ -3,6 +3,16 @@
 
 #include <QObject>
 #include <QString>
+#include <functional>
+
+class EffectController;
+
+class LuaInterface
+{
+public:
+    virtual ~LuaInterface() {}
+    virtual void registerEffect(const QString &name, std::function<EffectController *()>) = 0;
+};
 
 #ifdef HAS_LUAJIT
 
@@ -20,7 +30,7 @@ public:
     explicit LuaEngine(QObject *parent = 0);
     ~LuaEngine();
 
-    void initialize();
+    void initialize(LuaInterface *i);
 
     QString pluginDirectory();
 signals:
@@ -39,7 +49,7 @@ public:
     explicit LuaEngine(QObject *parent = 0);
     ~LuaEngine();
 
-    void initialize() { }
+    void initialize(LuaInterface *) { }
 
     QString pluginDirectory() { return QString(); }
 signals:

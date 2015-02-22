@@ -41,7 +41,7 @@ signals:
 
 protected:
     virtual QWidget *createEffectEditor(Session *) = 0;
-    virtual void applyEffect(Terrain *, QSharedPointer<TerrainEdit>, Session *) = 0;
+    virtual void applyEffect(QSharedPointer<Terrain>, QSharedPointer<TerrainEdit>, Session *) = 0;
 
 protected slots:
     void preview();

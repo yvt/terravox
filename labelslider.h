@@ -19,6 +19,7 @@ public:
     void bindSpinBox(QDoubleSpinBox *);
     void setNonLinearConversion(const std::function<double(double)>&,
                                 const std::function<double(double)>&);
+    void setLogarithmic();
 
 protected:
     void mousePressEvent(QMouseEvent *) override;

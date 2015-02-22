@@ -44,8 +44,8 @@ QWidget *ErosionEffectController::createEffectEditor(Session *)
     return editor;
 }
 
-void ErosionEffectController::applyEffect(Terrain *terrain, QSharedPointer<TerrainEdit> edit, Session *)
+void ErosionEffectController::applyEffect(QSharedPointer<Terrain> terrain, QSharedPointer<TerrainEdit> edit, Session *)
 {
-    fx->apply(terrain, edit.data());
+    fx->apply(terrain.data(), edit.data());
 }
 

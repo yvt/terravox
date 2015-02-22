@@ -2,10 +2,14 @@
 #define LUAENGINEPRIVATE_H
 
 #include "luaengine.h"
+#include <functional>
+#include <QScopedPointer>
+#include <QSharedPointer>
 
 #ifdef HAS_LUAJIT
 
 #include "lua/api.h"
+class LuaScriptInterface;
 
 class LuaEnginePrivate : public QObject
 {
@@ -15,14 +19,16 @@ class LuaEnginePrivate : public QObject
 
     lua_State *lua;
 
-    TerravoxApi api;
+    QScopedPointer<LuaScriptInterface> sinf;
+    QSharedPointer<bool> isDestroyed;
 
     bool callProtected(int nargs, int nresults);
+    bool callProtected(std::function<void()>);
 
 public:
     LuaEnginePrivate(LuaEngine *e);
 
-    void initialize();
+    void initialize(LuaInterface *i);
 
     ~LuaEnginePrivate();
 };

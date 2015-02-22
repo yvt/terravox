@@ -34,6 +34,15 @@ void LabelSlider::setNonLinearConversion(const std::function<double (double)> &f
     toLinearValue_ = backward;
 }
 
+void LabelSlider::setLogarithmic()
+{
+    setNonLinearConversion([](double i) -> double {
+        return std::log(i) * 20.;
+    }, [](double i) -> double {
+        return std::exp(i * 0.05);
+    });
+}
+
 void LabelSlider::mousePressEvent(QMouseEvent *e)
 {
     if (e->button() != Qt::LeftButton || (!spinBox_ && !dspinBox_)) {

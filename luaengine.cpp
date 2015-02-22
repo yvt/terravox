@@ -17,10 +17,10 @@ LuaEngine::~LuaEngine()
     delete d_ptr;
 }
 
-void LuaEngine::initialize()
+void LuaEngine::initialize(LuaInterface *i)
 {
     Q_D(LuaEngine);
-    d->initialize();
+    d->initialize(i);
 }
 
 #else

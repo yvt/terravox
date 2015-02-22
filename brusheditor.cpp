@@ -13,20 +13,12 @@ BrushEditor::BrushEditor(QSharedPointer<BrushTool> tool, QWidget *parent) :
     ui->setupUi(this);
 
     ui->brushSizeLabel->bindSpinBox(ui->brushSize);
-    ui->brushSizeLabel->setNonLinearConversion([](double i) -> double {
-        return std::log(i) * 20.;
-    }, [](double i) -> double {
-        return std::round(std::exp(i * 0.05));
-    });
+    ui->brushSizeLabel->setLogarithmic();
 
     ui->strengthLabel->bindSpinBox(ui->strength);
 
     ui->scaleLabel->bindSpinBox(ui->scaleField);
-    ui->scaleLabel->setNonLinearConversion([](double i) -> double {
-        return std::log(i) * 20.;
-    }, [](double i) -> double {
-        return std::exp(i * 0.05);
-    });
+    ui->scaleLabel->setLogarithmic();
 
     connect(tool.data(), SIGNAL(parameterChanged()), SLOT(loadParameters()));
     loadParameters();

@@ -28,13 +28,35 @@
 
 #include "vxl.h"
 
+class MainWindow::MainWindowLuaInterface : public LuaInterface
+{
+    MainWindow *window;
+public:
+    MainWindowLuaInterface(MainWindow *window) :
+        window(window)
+    {
+    }
+    void registerEffect(const QString &name,
+                        std::function<EffectController *()> fn) Q_DECL_OVERRIDE
+    {
+        QAction *action = new QAction(name + "...", window);
+        action->connect(action, (void(QAction::*)(bool))&QAction::triggered, [=](bool) {
+            auto *fx = fn();
+            if (!fx) {
+                return;
+            }
+            window->startEffectInstanceInterractive(QSharedPointer<EffectController>(fx));
+        });
+        window->ui->menuFil_ters->addAction(action);
+    }
+};
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     currentToolEditor(nullptr),
-    modified(false),
     settings(new QSettings()),
+    modified(false),
     closeForced(false)
 {
     ui->setupUi(this);
@@ -116,6 +138,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(colorSampler.data(), SIGNAL(sampled(QColor)),
             ui->primaryColorView, SLOT(setValue(QColor)));
 
+    luaInterface.reset(new MainWindowLuaInterface(this));
     lua.reset(new LuaEngine());
     connect(lua.data(), &LuaEngine::error, [&](const QString &error)
     {
@@ -127,7 +150,7 @@ MainWindow::MainWindow(QWidget *parent) :
         connect(msgbox, SIGNAL(finished(int)), msgbox, SLOT(deleteLater()));
         msgbox->show();
     });
-    lua->initialize();
+    lua->initialize(luaInterface.data());
 
     QSharedPointer<Session> s = QSharedPointer<Session>::create();
     s->setTerrain(QSharedPointer<Terrain>(TerrainGenerator(QSize(512, 512)).generateRandomLandform()));
@@ -194,6 +217,11 @@ MainWindow::~MainWindow()
 
     if (primaryColorPickerWindow)
         primaryColorPickerWindow->close();
+
+    session.reset();
+
+    lua.reset();
+    luaInterface.reset();
 
     delete ui;
 }
@@ -412,7 +440,7 @@ void MainWindow::closeEvent(QCloseEvent *e)
         return;
     }
     if (!confirmClose([=](bool success) {
-       if (success) { closeForced = true; close(); }
+       if (success) { closeForced = true; deleteLater(); }
     })) {
         e->ignore();
     }

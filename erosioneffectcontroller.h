@@ -17,7 +17,7 @@ public:
 
 protected:
     QWidget *createEffectEditor(Session *) override;
-    void applyEffect(Terrain *, QSharedPointer<TerrainEdit>, Session *) override;
+    void applyEffect(QSharedPointer<Terrain>, QSharedPointer<TerrainEdit>, Session *) override;
 };
 
 #endif // EROSIONEFFECTCONTROLLER_H

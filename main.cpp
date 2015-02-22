@@ -46,8 +46,8 @@ int main(int argc, char *argv[])
     myappTranslator.load(QLocale::system(), "terravox_", QString(), dir);
     a.installTranslator(&myappTranslator);
 
-    MainWindow w;
-    w.show();
+    MainWindow *w = new MainWindow();
+    w->show();
 
     return a.exec();
 }

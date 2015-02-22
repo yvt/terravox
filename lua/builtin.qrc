@@ -4,5 +4,9 @@
         <file>main.lua</file>
         <file>terrain.lua</file>
         <file>api.h</file>
+        <file>effect.lua</file>
+        <file>terrainedit.lua</file>
+        <file>tooleditor.lua</file>
+        <file>lclass.lua</file>
     </qresource>
 </RCC>

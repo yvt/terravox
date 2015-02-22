@@ -4,25 +4,28 @@ require "terravox.host"
 local ffi = require("ffi")
 local host = terravox.host.api
 
--- TODO: Terrain
+require "lclass"
 
-Terrain = {}
-Terrain.__index = Terrain
+class "Terrain"
 
-setmetatable(Terrain, {
-  __call = function (cls, ...) return cls.new(...) end
-})
+function Terrain.newFromHandle(handle) -- note: newFromHandle doesn't do ffi.gc!
+end
+function Terrain:Terrain(width, height)
+  local handle
+  if height then   -- Terrain(width, height)
+    handle = ffi.gc(host.terrainCreate(width, height), host.terrainRelease)
+  else             -- Terrain(handle)
+    handle = width
+  end
 
-function Terrain.new(width, height)
-  local handle = ffi.gc(host.terrainCreate(width, height), host.terrainRelease)
-  local self = setmetatable({
-    handle = handle,
-    width = width,
-    height = height,
-    landform = host.terrainGetLandformData(handle),
-    color = host.terrainGetColorData(handle)
-  }, Terrain)
-  return self
+  local dims = ffi.new("int[2]")
+  host.terrainGetSize(handle, dims)
+
+  self.handle = handle
+  self.width = dims[0]
+  self.height = dims[1]
+  self.landform = host.terrainGetLandformData(handle)
+  self.color = host.terrainGetColorData(handle)
 end
 
 function Terrain:getLandform(x, y)
@@ -38,4 +41,7 @@ end
 function Terrain:setColor(x, y, color)
   self.color[x + y * self.width] = color
   return value
+end
+function Terrain:clone()
+  return Terrain.newFromHandle(host.terrainClone(self.handle))
 end

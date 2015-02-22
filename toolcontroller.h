@@ -6,7 +6,6 @@
 #include <functional>
 
 class QWidget;
-class ToolEditor;
 class ToolView;
 class Session;
 class TerrainView;

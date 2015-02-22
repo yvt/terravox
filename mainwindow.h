@@ -35,8 +35,11 @@ public:
 private:
     Ui::MainWindow *ui;
 
+    class MainWindowLuaInterface;
+
     QScopedPointer<QSettings> settings;
 
+    QScopedPointer<MainWindowLuaInterface> luaInterface;
     QScopedPointer<LuaEngine> lua;
 
     QSharedPointer<Session> session;

@@ -82,7 +82,7 @@ void EffectController::preview()
 {
     Q_ASSERT(session);
 
-    applyEffect(session->terrain().data(), previewEdit, session);
+    applyEffect(session->terrain(), previewEdit, session);
 }
 
 void EffectController::apply()
