@@ -185,7 +185,9 @@
         <source>One or more plugins failed to load.
 
 %1</source>
-        <translation>1個以上のプラグインが読み込みに失敗しました。</translation>
+        <translation>1個以上のプラグインが読み込みに失敗しました。
+
+%1</translation>
     </message>
 </context>
 <context>
