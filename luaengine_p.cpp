@@ -6,6 +6,8 @@
 #include <QByteArray>
 #include <QDebug>
 #include <QApplication>
+#include <QSharedPointer>
+#include "luaapi.h"
 
 static int QtResourceSearcher(lua_State *lua)
 {
@@ -32,6 +34,12 @@ static int QtResourceSearcher(lua_State *lua)
     QByteArray source = file.readAll();
     if (isApiFile) {
         // translate to LuaJIT FFI definition code
+        QString str(source);
+        auto lines = str.split('\n');
+        lines = lines.filter(QRegExp("^[^#].*$"));
+        str = lines.join('\n');
+        source = str.toUtf8();
+
         source.prepend("require(\"ffi\").cdef[[");
         source.append("]]");
     }
@@ -59,10 +67,7 @@ void LuaEnginePrivate::initialize()
     lua_pushcfunction(lua, &QtResourceSearcher);
     lua_setglobal(lua, "__qsearcher");
 
-    // set api structure
-    api.aboutQt = []() {
-        QApplication::aboutQt();
-    };
+    api = createApiInterface();
     lua_pushinteger(lua, reinterpret_cast<lua_Integer>(&api));
     lua_setglobal(lua, "__terravoxApi");
 

@@ -1,7 +1,8 @@
 module(..., package.seeall)
 
 require "terravox.host"
-local api = terravox.host.api
+local ffi = require("ffi")
+local host = terravox.host.api
 
 -- TODO: Terrain
 
@@ -9,16 +10,22 @@ Terrain = {}
 Terrain.__index = Terrain
 
 setmetatable(Terrain, {
-	__call = function (cls, ...) return cls.new(...) end
+  __call = function (cls, ...) return cls.new(...) end
 })
 
-function Terrain.new()
-	error "not implemented"
-	local self = setmetatable({}, Terrain)
-	return self
-end function
+function Terrain.new(width, height)
+  local handle = ffi.gc(host.terrainCreate(width, height), host.terrainRelease)
+  local self = setmetatable({
+    handle = handle,
+    width = width,
+    height = height,
+    landform = host.terrainGetLandformData(handle),
+    color = host.terrainGetColorData(handle)
+  }, Terrain)
+  return self
+end
 
-function Terrain:getLandform(x, y) 
+function Terrain:getLandform(x, y)
   return self.landform[x + y * self.width]
 end
 function Terrain:getColor(x, y) 
@@ -26,7 +33,9 @@ function Terrain:getColor(x, y)
 end
 function Terrain:setLandform(x, y, value)
   self.landform[x + y * self.width] = value
+  return value
 end
 function Terrain:setColor(x, y, color)
   self.color[x + y * self.width] = color
+  return value
 end

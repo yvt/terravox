@@ -50,7 +50,8 @@ SOURCES += main.cpp\
     manipulatetoolcontroller.cpp \
     manipulatetoolview.cpp \
     luaengine.cpp \
-    luaengine_p.cpp
+    luaengine_p.cpp \
+    luaapi.cpp
 
 HEADERS  += mainwindow.h \
     brusheditor.h \
@@ -85,7 +86,8 @@ HEADERS  += mainwindow.h \
     manipulatetoolview.h \
     luaengine.h \
     luaengine_p.h \
-    lua/api.h
+    lua/api.h \
+    luaapi.h
 
 FORMS    += mainwindow.ui \
     brusheditor.ui \
