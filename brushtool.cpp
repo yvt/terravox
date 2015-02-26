@@ -10,6 +10,10 @@
 #include "coherentnoisegenerator.h"
 #include <random>
 
+#if defined(__APPLE__)
+#  define sqrtf std::sqrtf
+#endif
+
 BrushTool::BrushTool(BrushType type, QObject *parent) :
     QObject(parent),
     type_(type)
@@ -96,7 +100,7 @@ QSharedPointer<Terrain> BrushTool::tip(QPoint origin)
                     for (int x = 0; x < size; ++x) {
                         int cx = (x << 1) - size + 1;
                         int cy = (y << 1) - size + 1;
-                        float sq = 1.f - std::sqrtf(cx * cx + cy * cy) * scale;
+                        float sq = 1.f - sqrtf(cx * cx + cy * cy) * scale;
                         float alt;
                         if (sq <= 0.f) {
                             alt = 0.f;
@@ -132,7 +136,7 @@ QSharedPointer<Terrain> BrushTool::tip(QPoint origin)
                 for (int x = 0; x < size; ++x) {
                     int cx = (x << 1) - size + 1;
                     int cy = (y << 1) - size + 1;
-                    float sq = 1.f - std::sqrtf(cx * cx + cy * cy) * scale;
+                    float sq = 1.f - sqrtf(cx * cx + cy * cy) * scale;
                     float alt;
                     if (sq <= 0.f) {
                         alt = 0.f;
@@ -149,7 +153,7 @@ QSharedPointer<Terrain> BrushTool::tip(QPoint origin)
                 for (int x = 0; x < size; ++x) {
                     int cx = (x << 1) - size + 1;
                     int cy = (y << 1) - size + 1;
-                    float sq = 1.f - std::sqrtf(cx * cx + cy * cy) * scale;
+                    float sq = 1.f - sqrtf(cx * cx + cy * cy) * scale;
                     float alt;
                     if (sq <= 0.f) {
                         alt = 0.f;

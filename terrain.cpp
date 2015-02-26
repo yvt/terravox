@@ -2,6 +2,10 @@
 #include <xmmintrin.h>
 #include <smmintrin.h>
 
+#if defined(__APPLE__)
+#  define memcpy std::memcpy
+#endif
+
 Terrain::Terrain(const QSize &size) :
     size_(size)
 {
@@ -47,10 +51,10 @@ void Terrain::copyFrom(Terrain *t, QPoint dest, QRect src)
 
 
     for (int y = 0; y < src.height(); ++y) {
-        std::memcpy(landform_.data() + (y + dest.y()) * size().width() + dest.x(),
+        memcpy(landform_.data() + (y + dest.y()) * size().width() + dest.x(),
                     t->landform_.data() + (y + src.y()) * t->size().width() + src.x(),
                     src.width() * sizeof(float));
-        std::memcpy(color_.data() + (y + dest.y()) * size().width() + dest.x(),
+        memcpy(color_.data() + (y + dest.y()) * size().width() + dest.x(),
                     t->color_.data() + (y + src.y()) * t->size().width() + src.x(),
                     src.width() * sizeof(quint32));
     }

@@ -7,6 +7,10 @@
 #include "terrainedit.h"
 #include <QApplication>
 
+#if defined(__APPLE__)
+#  define sqrtf std::sqrtf
+#endif
+
 static const QPoint InvalidPoint(-1000, -1000);
 
 BrushToolView::BrushToolView(TerrainView *view, Session *session, BrushTool *tool) :
@@ -189,7 +193,7 @@ void BrushToolView::paint(bool interpolated)
         elapsedTimer.start();
         if (interpolated && lastCursor != InvalidPoint && cursor != InvalidPoint && lastCursor != cursor) {
             QPoint diff = cursor - lastCursor;
-            float dist = std::sqrtf(diff.x() * diff.x() + diff.y() * diff.y());
+            float dist = sqrtf(diff.x() * diff.x() + diff.y() * diff.y());
             float interval = currentEdit->parameters().size / 8 + 1;
             int steps = std::max(1, static_cast<int>(std::ceil(dist / interval)));
             float x1 = lastCursor.x(), y1 = lastCursor.y();

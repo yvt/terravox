@@ -6,6 +6,10 @@
 #include "terrain.h"
 #include "terrainedit.h"
 
+#if defined(__APPLE__)
+#  define memset std::memset
+#endif
+
 ManipulateToolView::ManipulateToolView(ManipulateMode mode, Session *session, TerrainView *view) :
     session(session),
     view(view),
@@ -21,7 +25,7 @@ ManipulateToolView::ManipulateToolView(ManipulateMode mode, Session *session, Te
     connect(view, SIGNAL(terrainPaint(TerrainViewDrawingContext*)), SLOT(terrainPaint(TerrainViewDrawingContext*)));
 
     highlightImage = QImage(8, 8, QImage::Format_RGB32);
-    std::memset(highlightImage.bits(), 0, 8 * 8 * 4);
+    memset(highlightImage.bits(), 0, 8 * 8 * 4);
     for (int i = 0; i < 8; ++i) {
         uint col = 0xff00;
         highlightImage.setPixel(i, 0, col);
