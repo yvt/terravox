@@ -11,6 +11,11 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 QMAKE_CXXFLAGS += -msse4.1 -mssse3 -msse3 -msse2 -msse -Wno-missing-braces
 
+unix:!macx {
+    QMAKE_CXX=clang++
+    QMAKE_CC=clang
+}
+
 TARGET = Terravox
 TEMPLATE = app
 

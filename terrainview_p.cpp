@@ -4,6 +4,10 @@
 #include <smmintrin.h>
 #include "terrain.h"
 
+#if defined(__APPLE__)
+#  define memset std::memset
+#endif
+
 static void transposeImage(quint32 *dest, QSize size, const quint32 *src)
 {
     Q_ASSUME((size.width() & 3) == 0);
@@ -147,7 +151,7 @@ void TerrainView::TerrainViewPrivate::renderLandform(Colorizer&& colorizer)
                 if (pushToBoundary(scanStart, rayDir, QVector2D(0, 1), 0, first))
                     wall = Wall::NegativeY;
             }
-            std::memset(lineColorOutput, 0xf, imgHeight * 4);
+            memset(lineColorOutput, 0xf, imgHeight * 4);
             std::fill(lineDepthOutput, lineDepthOutput + imgHeight, 1.e+4f);
             if (WriteHeight)
                 std::fill(lineHeightOutput, lineHeightOutput + imgHeight, 1.e+4f);

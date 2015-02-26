@@ -6,6 +6,11 @@
 #include <QHash>
 #include <QRect>
 
+#if (defined(__linux) || defined(__unix)) && ! defined(__APPLE__)
+#  include <memory>
+#endif
+
+
 class Terrain;
 
 
