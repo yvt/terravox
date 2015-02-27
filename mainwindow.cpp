@@ -504,7 +504,7 @@ void MainWindow::on_actionAbout_Qt_triggered()
 
 void MainWindow::on_actionAbout_triggered()
 {
-    QMessageBox::about(this, tr("About Terravox"), tr("Terravox (version %1)").arg(tr("unknown")));
+    QMessageBox::about(this, tr("About Terravox"), tr("Terravox (version %1)").arg("0.0.1"));
 }
 
 void MainWindow::on_actionOpen_triggered()
