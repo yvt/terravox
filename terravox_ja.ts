@@ -243,7 +243,7 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="394"/>
-        <location filename="mainwindow.cpp" line="653"/>
+        <location filename="mainwindow.cpp" line="658"/>
         <source>Primary Color</source>
         <translation>主カラー</translation>
     </message>
@@ -290,7 +290,7 @@
     <message>
         <location filename="mainwindow.ui" line="487"/>
         <source>Ctrl+O</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+O</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="492"/>
@@ -300,7 +300,7 @@
     <message>
         <location filename="mainwindow.ui" line="495"/>
         <source>Ctrl+S</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+S</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="500"/>
@@ -310,7 +310,7 @@
     <message>
         <location filename="mainwindow.ui" line="503"/>
         <source>Ctrl+Shift+S</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+Shift+S</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="508"/>
@@ -330,7 +330,7 @@
     <message>
         <location filename="mainwindow.ui" line="521"/>
         <source>Ctrl+Shift+V</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+Shift+V</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="526"/>
@@ -340,7 +340,7 @@
     <message>
         <location filename="mainwindow.ui" line="529"/>
         <source>Ctrl+Z</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+Z</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="534"/>
@@ -350,7 +350,7 @@
     <message>
         <location filename="mainwindow.ui" line="537"/>
         <source>Ctrl+Shift+Z</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+Shift+Z</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="542"/>
@@ -411,7 +411,7 @@
     </message>
     <message>
         <location filename="mainwindow.cpp" line="335"/>
-        <location filename="mainwindow.cpp" line="514"/>
+        <location filename="mainwindow.cpp" line="519"/>
         <source>Voxlap5 512x512x64 VXL (*.vxl)</source>
         <translation></translation>
     </message>
@@ -436,49 +436,44 @@
         <translation>Terravoxについて</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="507"/>
-        <source>Terravox (version %1)</source>
-        <translation>Terravox (バージョン %1)</translation>
+        <location filename="mainwindow.cpp" line="508"/>
+        <source>%3 (version %1)&lt;br&gt;&lt;br&gt;For license information, please read LICENSE.txt that comes with this software.&lt;br&gt;&lt;br&gt;See &lt;a href=&apos;%2&apos;&gt;%2&lt;/a&gt; for the source code repository, issue tracker, and further information.</source>
+        <translation>%3 (バージョン %1)&lt;br&gt;&lt;br&gt;ライセンス情報については、このソフトウェアに付属するLICENSE.txtをご覧下さい。&lt;br&gt;&lt;br&gt;&lt;a href=&apos;%2&apos;&gt;%2&lt;/a&gt;から、ソースコードリポジトリ、問題トラッカー、及びその他の情報にアクセスすることができます。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="507"/>
-        <source>unknown</source>
-        <translation>不明</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.cpp" line="513"/>
+        <location filename="mainwindow.cpp" line="518"/>
         <source>Open</source>
         <translation>開く</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="522"/>
+        <location filename="mainwindow.cpp" line="527"/>
         <source>Could not open file.</source>
         <translation>ファイルを開けませんでした。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="560"/>
+        <location filename="mainwindow.cpp" line="565"/>
         <source>File could be opened successfully, but there was a problem.</source>
         <translation>ファイルを開くことは成功しましたが、問題があります。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="690"/>
-        <location filename="mainwindow.cpp" line="702"/>
-        <location filename="mainwindow.cpp" line="713"/>
+        <location filename="mainwindow.cpp" line="695"/>
+        <location filename="mainwindow.cpp" line="707"/>
+        <location filename="mainwindow.cpp" line="718"/>
         <source>Cannot open the plugins folder.</source>
         <translation>プラグインフォルダを開けませんでした。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="693"/>
+        <location filename="mainwindow.cpp" line="698"/>
         <source>Could not determine a writable plugins folder.</source>
         <translation>書き込み可能なプラグインフォルダの場所を決定できませんでした。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="705"/>
+        <location filename="mainwindow.cpp" line="710"/>
         <source>Could not create the plugins folder at &apos;%1&apos;.</source>
         <translation>プラグインフォルダを &apos;%1&apos; に作成できませんでした。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="716"/>
+        <location filename="mainwindow.cpp" line="721"/>
         <source>Failed to launch the file manager to show &apos;%1&apos;.</source>
         <translation>&apos;%1&apos; を表示するためにファイルマネージャを起動することができませんでした。</translation>
     </message>

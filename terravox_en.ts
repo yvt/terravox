@@ -241,7 +241,7 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="394"/>
-        <location filename="mainwindow.cpp" line="653"/>
+        <location filename="mainwindow.cpp" line="658"/>
         <source>Primary Color</source>
         <translation type="unfinished"></translation>
     </message>
@@ -409,7 +409,7 @@
     </message>
     <message>
         <location filename="mainwindow.cpp" line="335"/>
-        <location filename="mainwindow.cpp" line="514"/>
+        <location filename="mainwindow.cpp" line="519"/>
         <source>Voxlap5 512x512x64 VXL (*.vxl)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -434,49 +434,44 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="507"/>
-        <source>Terravox (version %1)</source>
+        <location filename="mainwindow.cpp" line="508"/>
+        <source>%3 (version %1)&lt;br&gt;&lt;br&gt;For license information, please read LICENSE.txt that comes with this software.&lt;br&gt;&lt;br&gt;See &lt;a href=&apos;%2&apos;&gt;%2&lt;/a&gt; for the source code repository, issue tracker, and further information.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="507"/>
-        <source>unknown</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.cpp" line="513"/>
+        <location filename="mainwindow.cpp" line="518"/>
         <source>Open</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="522"/>
+        <location filename="mainwindow.cpp" line="527"/>
         <source>Could not open file.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="560"/>
+        <location filename="mainwindow.cpp" line="565"/>
         <source>File could be opened successfully, but there was a problem.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="690"/>
-        <location filename="mainwindow.cpp" line="702"/>
-        <location filename="mainwindow.cpp" line="713"/>
+        <location filename="mainwindow.cpp" line="695"/>
+        <location filename="mainwindow.cpp" line="707"/>
+        <location filename="mainwindow.cpp" line="718"/>
         <source>Cannot open the plugins folder.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="693"/>
+        <location filename="mainwindow.cpp" line="698"/>
         <source>Could not determine a writable plugins folder.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="705"/>
+        <location filename="mainwindow.cpp" line="710"/>
         <source>Could not create the plugins folder at &apos;%1&apos;.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="716"/>
+        <location filename="mainwindow.cpp" line="721"/>
         <source>Failed to launch the file manager to show &apos;%1&apos;.</source>
         <translation type="unfinished"></translation>
     </message>

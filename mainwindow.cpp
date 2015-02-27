@@ -504,7 +504,12 @@ void MainWindow::on_actionAbout_Qt_triggered()
 
 void MainWindow::on_actionAbout_triggered()
 {
-    QMessageBox::about(this, tr("About Terravox"), tr("Terravox (version %1)").arg("0.0.1"));
+    QMessageBox::about(this, tr("About Terravox"),
+                       tr("%3 (version %1)"
+                          "<br><br>For license information, please read LICENSE.txt that comes with this software."
+                          "<br><br>See <a href='%2'>%2</a> for the source code repository, "
+                          "issue tracker, and further information.")
+                       .arg("0.0.1", "https://github.com/yvt/terravox", QApplication::applicationName()));
 }
 
 void MainWindow::on_actionOpen_triggered()
