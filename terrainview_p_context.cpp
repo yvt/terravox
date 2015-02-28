@@ -74,7 +74,7 @@ class TerrainView::TerrainViewPrivate::DrawingContext : public TerrainViewDrawin
                     // iCoords1 = _mm_andnot_si128(inside1, iCoords1);
                     // iCoords2 = _mm_andnot_si128(inside2, iCoords2);
                     auto inside = _mm_packs_epi32(inside1, inside2); // [xInside[16], yInside[16]] x 4
-                    inside = _mm_and_ps(inside, _mm_srli_epi32(inside, 16)); // [inside[16], invalid[16]] * 4
+                    inside = _mm_and_si128(inside, _mm_srli_epi32(inside, 16)); // [inside[16], invalid[16]] * 4
                     auto insideMask = _mm_movemask_epi8(inside); // [inside[2], invalid[2]] * 4
                     if (insideMask & 0x1111) {
                         if (insideMask & 0x1) {
