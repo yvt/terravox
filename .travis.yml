@@ -1,0 +1,29 @@
+language: cpp
+
+compiler:
+  - gcc-4.8
+  - clang
+
+cache: apt
+
+before_install:
+  - sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test
+  - sudo apt-get update
+  - if [ "$CC" == "gcc" ]; then export APT_INSTALL_GPP=g++-4.8; fi
+
+install:
+  - sudo apt-get install pkg-config qtbase5-dev libluajit-5.1-dev $APT_INSTALL_GPP
+
+before_script:
+  # Travis defaults to plain gcc if unknown
+  # http://github.com/travis-ci/travis-ci/issues/979
+  - if [ "$CC" == "gcc" ]; then export CC=gcc-4.8; fi
+  - if [ "$CXX" == "g++" ]; then export CXX=g++-4.8; fi 
+
+  - mkdir build
+  - cd build
+
+script: 
+  - qmake ../Terravox.pro
+  - make
+
