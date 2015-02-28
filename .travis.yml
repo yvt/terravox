@@ -8,6 +8,7 @@ cache: apt
 
 before_install:
   - sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test
+  - sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa
   - sudo apt-get update
   - if [ "$CC" == "gcc" ]; then export APT_INSTALL_GPP=g++-4.8; fi
 
