@@ -8,12 +8,12 @@ cache: apt
 
 before_install:
   - sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test
-  - sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa
+  - sudo add-apt-repository --yes ppa:beineri/opt-qt541
   - sudo apt-get update
   - if [ "$CC" == "gcc" ]; then export APT_INSTALL_GPP=g++-4.8; fi
 
 install:
-  - sudo apt-get install pkg-config qtbase5-dev libluajit-5.1-dev qt5-default $APT_INSTALL_GPP
+  - sudo apt-get install make pkg-config qt54base libluajit-5.1-dev $APT_INSTALL_GPP
 
 before_script:
   # Travis defaults to plain gcc if unknown
@@ -25,6 +25,6 @@ before_script:
   - cd build
 
 script: 
-  - qmake ../Terravox.pro
+  - /opt/qt54/bin/qmake ../Terravox.pro QMAKE_CXX=$CXX
   - make
 
