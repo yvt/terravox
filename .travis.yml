@@ -26,5 +26,5 @@ before_script:
 
 script: 
   - /opt/qt54/bin/qmake ../Terravox.pro QMAKE_CXX=$CXX
-  - make
+  - make -k 
 
