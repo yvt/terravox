@@ -1,6 +1,8 @@
 Terravox
 ========
 
+[![Build Status](https://travis-ci.org/yvt/terravox.svg?branch=master)](https://travis-ci.org/yvt/terravox)
+
 Terravox is a heightmap Editor which can be used to create a Voxlap5 VXL data quickly.
 
 ![](https://dl.dropboxusercontent.com/u/37804131/terravox/ss1.png)
