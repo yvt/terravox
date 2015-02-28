@@ -118,10 +118,10 @@ void TerrainView::TerrainViewPrivate::updateAmbientOcclusion()
                 ++x;
             }
             if (x == 1) {
-                auto in1 = _mm_loadu_ps(inLand1); in1 = _mm_slli_si128(in1, 4);
-                auto in2 = _mm_loadu_ps(inLand2); in2 = _mm_slli_si128(in2, 4);
-                auto in3 = _mm_loadu_ps(inLand3); in3 = _mm_slli_si128(in3, 4);
-                auto in4 = _mm_loadu_ps(inLand4); in4 = _mm_slli_si128(in4, 4);
+                auto in1 = _mm_loadu_ps(inLand1); in1 = _mm_castsi128_ps(_mm_slli_si128(_mm_castps_si128(in1), 4));
+                auto in2 = _mm_loadu_ps(inLand2); in2 = _mm_castsi128_ps(_mm_slli_si128(_mm_castps_si128(in2), 4));
+                auto in3 = _mm_loadu_ps(inLand3); in3 = _mm_castsi128_ps(_mm_slli_si128(_mm_castps_si128(in3), 4));
+                auto in4 = _mm_loadu_ps(inLand4); in4 = _mm_castsi128_ps(_mm_slli_si128(_mm_castps_si128(in4), 4));
                 in1 = _mm_move_ss(in1, _mm_set_ss(Bottom));
                 in2 = _mm_move_ss(in2, _mm_set_ss(Bottom));
                 in3 = _mm_move_ss(in3, _mm_set_ss(Bottom));
@@ -281,7 +281,7 @@ void TerrainView::TerrainViewPrivate::applyAmbientOcclusion()
                 auto floorHeight = _mm_loadu_ps(lineHeightInput);
 
                 // background cull
-                auto isForeground = _mm_castsi128_ps(_mm_cmplt_ps(floorHeight, _mm_set1_ps(512.f)));
+                auto isForeground = _mm_cmplt_ps(floorHeight, _mm_set1_ps(512.f));
                 if (!_mm_movemask_ps(isForeground)) {
                     p = _mm_add_ps(p, dpdyMM4);
                     continue;
@@ -378,17 +378,17 @@ void TerrainView::TerrainViewPrivate::applyAmbientOcclusion()
                 // calculate color coef
                 auto coeff = _mm_mul_ps(aoDepth, _mm_set1_ps(64.5f));   // f32 * 4
                 /* DEBUG */ // coeff = _mm_mul_ps(aoZ, _mm_set1_ps(1.f ));
-                coeff = _mm_cvttps_epi32(coeff);                // i32 * 4
-                coeff = _mm_packs_epi32(coeff, coeff);          // i16 * 4 + pad
-                coeff = _mm_unpacklo_epi16(coeff, coeff);       // i16 [c1, c1, c2, c2, c3, c3, c4, c4]
+                auto coeffI = _mm_cvttps_epi32(coeff);                // i32 * 4
+                coeffI = _mm_packs_epi32(coeffI, coeffI);          // i16 * 4 + pad
+                coeffI = _mm_unpacklo_epi16(coeffI, coeffI);       // i16 [c1, c1, c2, c2, c3, c3, c4, c4]
 
                 // load color
                 auto col = _mm_loadu_si128(reinterpret_cast<__m128i*>(lineColorOutput));
                 auto originalColor = col;
                 auto colLo = _mm_unpacklo_epi8(col, _mm_setzero_si128());
-                colLo = _mm_srai_epi16(_mm_mullo_epi16(colLo, _mm_unpacklo_epi16(coeff, coeff)), 6);
+                colLo = _mm_srai_epi16(_mm_mullo_epi16(colLo, _mm_unpacklo_epi16(coeffI, coeffI)), 6);
                 auto colHi = _mm_unpackhi_epi8(col, _mm_setzero_si128());
-                colHi = _mm_srai_epi16(_mm_mullo_epi16(colHi, _mm_unpackhi_epi16(coeff, coeff)), 6);
+                colHi = _mm_srai_epi16(_mm_mullo_epi16(colHi, _mm_unpackhi_epi16(coeffI, coeffI)), 6);
                 col = _mm_packus_epi16(colLo, colHi);
 
                 // keep background color original

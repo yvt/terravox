@@ -26,7 +26,7 @@ class TerrainView::TerrainViewPrivate::DrawingContext : public TerrainViewDrawin
         __m128 decalScaler = _mm_setr_ps(decalWidth / size.width(), decalHeight / size.height(), 0, 0);
         decalScaler = _mm_shuffle_ps(decalScaler, decalScaler, 0x44);
 
-        __m128 decalSize = _mm_setr_epi32(decalWidth, decalHeight, 0, 0);
+        __m128i decalSize = _mm_setr_epi32(decalWidth, decalHeight, 0, 0);
         decalSize = _mm_shuffle_epi32(decalSize, 0x44);
 
         QtConcurrent::blockingMap(RangeIterator(0), RangeIterator((imgWidth + 63) >> 6), [=](int block) {

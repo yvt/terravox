@@ -482,16 +482,16 @@ void TerrainView::TerrainViewPrivate::applySharpeningFilter()
                 // calculate color coef
                 auto coeff = _mm_mul_ps(t, _mm_set1_ps(-16.f));   // f32 * 4
                 coeff = _mm_add_ps(coeff, _mm_set1_ps(64.5f));   // f32 * 4
-                coeff = _mm_cvttps_epi32(coeff);                // i32 * 4
-                coeff = _mm_packs_epi32(coeff, coeff);          // i16 * 4 + pad
-                coeff = _mm_unpacklo_epi16(coeff, coeff);       // i16 [c1, c1, c2, c2, c3, c3, c4, c4]
+                auto coeffI = _mm_cvttps_epi32(coeff);                // i32 * 4
+                coeffI = _mm_packs_epi32(coeffI, coeffI);          // i16 * 4 + pad
+                coeffI = _mm_unpacklo_epi16(coeffI, coeffI);       // i16 [c1, c1, c2, c2, c3, c3, c4, c4]
 
                 // load color
                 auto col = _mm_loadu_si128(reinterpret_cast<__m128i*>(color));
                 auto colLo = _mm_unpacklo_epi8(col, _mm_setzero_si128());
-                colLo = _mm_srai_epi16(_mm_mullo_epi16(colLo, _mm_unpacklo_epi16(coeff, coeff)), 6);
+                colLo = _mm_srai_epi16(_mm_mullo_epi16(colLo, _mm_unpacklo_epi16(coeffI, coeffI)), 6);
                 auto colHi = _mm_unpackhi_epi8(col, _mm_setzero_si128());
-                colHi = _mm_srai_epi16(_mm_mullo_epi16(colHi, _mm_unpackhi_epi16(coeff, coeff)), 6);
+                colHi = _mm_srai_epi16(_mm_mullo_epi16(colHi, _mm_unpackhi_epi16(coeffI, coeffI)), 6);
                 col = _mm_packus_epi16(colLo, colHi);
 
                 _mm_storeu_si128(reinterpret_cast<__m128i*>(color), col);
