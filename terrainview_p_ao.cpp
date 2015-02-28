@@ -392,9 +392,9 @@ void TerrainView::TerrainViewPrivate::applyAmbientOcclusion()
                 col = _mm_packus_epi16(colLo, colHi);
 
                 // keep background color original
-                col = _mm_and_si128(isForeground, col);
-                originalColor = _mm_andnot_ps(isForeground, originalColor);
-                col = _mm_or_ps(col, originalColor);
+                col = _mm_and_si128(_mm_castps_si128(isForeground), col);
+                originalColor = _mm_andnot_si128(_mm_castps_si128(isForeground), originalColor);
+                col = _mm_or_si128(col, originalColor);
 
                 _mm_storeu_si128(reinterpret_cast<__m128i*>(lineColorOutput), col);
 
