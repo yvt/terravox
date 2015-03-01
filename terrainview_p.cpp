@@ -316,9 +316,21 @@ void TerrainView::TerrainViewPrivate::renderLandform(Colorizer&& colorizer)
             landform += rayCellX + rayCellY * tWidth;
             color += rayCellX + rayCellY * tWidth;
 
+            float xHitTime;
+            float yHitTime;
+            switch (wall) {
+            case Wall::PositiveX:
+            case Wall::NegativeX:
+                xHitTime = (static_cast<float>(nextRayCellX) - rayPos.x()) * invRayDirX;
+                goto hitXWall;
+            case Wall::PositiveY:
+            case Wall::NegativeY:
+                yHitTime = (static_cast<float>(nextRayCellY) - rayPos.y()) * invRayDirY;
+                goto hitYWall;
+            }
+
             while (true) {
-                float xHitTime = 114514.f;
-                float yHitTime;
+                xHitTime = 114514.f;
 
                 {
                     _mm_prefetch(reinterpret_cast<char const *>(landform + prefetchIndex), _MM_HINT_T0);
@@ -331,6 +343,7 @@ void TerrainView::TerrainViewPrivate::renderLandform(Colorizer&& colorizer)
                 if (rayDirMask.anyY() &&
                     (yHitTime = (static_cast<float>(nextRayCellY) - rayPos.y()) * invRayDirY) < xHitTime) {
                     // Hit Y wall
+                  hitYWall:
                     float offs = yHitTime * zOffsetPerTravel;
                     zOffset += offs;
 
@@ -360,6 +373,7 @@ void TerrainView::TerrainViewPrivate::renderLandform(Colorizer&& colorizer)
                     travelDistance += yHitTime;
                 } else {
                     // Hit X wall
+                  hitXWall:
                     float offs = xHitTime * zOffsetPerTravel;
                     zOffset += offs;
 
@@ -398,6 +412,7 @@ void TerrainView::TerrainViewPrivate::renderLandform(Colorizer&& colorizer)
 
                 if (enteredScreen || zOffset < imgHeight) { // map fragment visible on screen?
                     // sample
+                    Q_ASSERT(rayCellX >= 0 && rayCellY >= 0 && rayCellX < tWidth && rayCellY < tHeight);
                     float land = *landform;
                     quint32 col = *color;
                     col = colorizer(col, land);
