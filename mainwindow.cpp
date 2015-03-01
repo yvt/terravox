@@ -153,6 +153,10 @@ MainWindow::MainWindow(QWidget *parent) :
     });
     lua->initialize(luaInterface.data());
 
+    if (lua->pluginDirectories(false).empty()) {
+        ui->actionOpenPluginsFolder->setVisible(false);
+    }
+
     QSharedPointer<Session> s = QSharedPointer<Session>::create();
     s->setTerrain(QSharedPointer<Terrain>(TerrainGenerator(QSize(512, 512)).generateRandomLandform()));
     s->terrain()->quantize();

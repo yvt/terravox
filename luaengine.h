@@ -51,7 +51,7 @@ public:
     explicit LuaEngine(QObject *parent = 0);
     ~LuaEngine();
 
-    void initialize(LuaInterface *) { }
+    void initialize(LuaInterface *);
 
     QStringList pluginDirectories(bool writable) { return QStringList(); }
 signals:

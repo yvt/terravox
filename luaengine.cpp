@@ -5,6 +5,7 @@
 #include <QStandardPaths>
 #include <QHash>
 #include <QDir>
+#include <QDebug>
 
 #ifdef HAS_LUAJIT
 
@@ -81,5 +82,9 @@ LuaEngine::~LuaEngine()
 {
 }
 
+void LuaEngine::initialize(LuaInterface *)
+{
+    qDebug() << "LuaEngine was not initialized: disabled by compilation option.";
+}
 
 #endif
