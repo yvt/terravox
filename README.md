@@ -11,7 +11,13 @@ Terravox is a heightmap Editor which can be used to create a Voxlap5 VXL data qu
 Installation
 ------------
 
-TODO. Use qmake.
+1. Make sure following development packages are installed.
+  * C++ compiler. GCC 4.8 / Clang 3.2 or later is recommended.
+  * Qt 5.4 or later.
+  * (Optionally, LuaJIT for scripting support)
+2. `qmake Terravox.pro`
+3. `make`
+  
 
 Organization
 ------------
