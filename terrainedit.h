@@ -40,8 +40,10 @@ public:
 
     uint size() const;
 
-    static constexpr int SubeditSizeBits = 5;
-    static constexpr int SubeditSize = 1 << SubeditSizeBits;
+    enum {
+        SubeditSizeBits = 5,
+        SubeditSize = 1 << SubeditSizeBits
+    };
 
 signals:
     void edited(QRect);

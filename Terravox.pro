@@ -6,10 +6,20 @@
 
 QT       += core gui concurrent
 CONFIG += c++11 sse4.1
+win32 {
+    # We want fewer dll files
+    CONFIG += static
+}
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-QMAKE_CXXFLAGS += -msse4.1 -mssse3 -msse3 -msse2 -msse -Wno-missing-braces
+QMAKE_CXXFLAGS += -msse4.1 -mssse3 -msse3 -msse2 -msse
+
+!win32-msvc2013 {
+    # GCC specific option. Results in an error with MSVC.
+    # FIXME: !gcc { ... }
+    QMAKE_CXXFLAGS += -Wno-missing-braces
+}
 
 TARGET = Terravox
 TEMPLATE = app
@@ -108,8 +118,15 @@ TRANSLATIONS += terravox_ja.ts
 # Link LuaJIT
 CONFIG += link_pkgconfig
 QT_CONFIG -= no-pkg-config
-#   packagesExist(luajit)  { # doesn't work in Qt5
-system(pkg-config luajit) {
+
+!isEmpty(LUAJIT_CFLAGS) {
+    message(LuaJIT specified by parameter.)
+    DEFINES += HAS_LUAJIT
+    QMAKE_CXXFLAGS += $$LUAJIT_CFLAGS
+    QMAKE_CFLAGS += $$LUAJIT_CFLAGS
+    QMAKE_LFLAGS += $$LUAJIT_LFLAGS
+} else: packagesExist(luajit) | system(pkg-config luajit) {
+    message(LuaJIT found by pkg-config)
     PKGCONFIG += luajit
     DEFINES += HAS_LUAJIT
     mac { # LuaJIT has issues with x86_64 OS X

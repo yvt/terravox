@@ -2,6 +2,7 @@
 #include <memory>
 #include "terrain.h"
 #include <random>
+#include <cstdint>
 
 TerrainGenerator::TerrainGenerator(const QSize &size) :
     size_(size)

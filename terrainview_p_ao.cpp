@@ -5,7 +5,9 @@
 #include <QMatrix4x4>
 #include "temporarybuffer.h"
 
-static constexpr int AORange = 2;
+enum {
+    AORange = 2
+};
 
 //
 // AORange = 2

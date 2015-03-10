@@ -28,7 +28,8 @@ TerrainView::~TerrainView()
 QPoint TerrainView::rayCast(const QPoint &p)
 {
     Q_D(TerrainView);
-    if (p.x() <= 0 || p.y() <= 0 || p.x() >= d->image_->size().width() ||
+	
+    if (!d->image_ || p.x() <= 0 || p.y() <= 0 || p.x() >= d->image_->size().width() ||
             p.y() >= d->image_->size().height()) {
         return QPoint(-1000, -1000);
     }
