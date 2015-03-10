@@ -83,7 +83,7 @@ public:
     TerrainViewPrivate(TerrainView *q) :
         q_ptr(q),
         centerPos_(256, 256, 64),
-        yaw_(M_PI / 4.f),
+        yaw_(3.14159265358979323846 / 4.f),
         pitch_(.3f),
         scale_(2.f),
         dragging_(false)

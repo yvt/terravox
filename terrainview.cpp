@@ -198,7 +198,7 @@ void TerrainView::mouseMoveEvent(QMouseEvent *e)
             d->centerPos_ = newPos;
         } else {
             d->yaw_ = d->dragStartYaw_ + diff.x() * 0.01f;
-            d->pitch_ = std::max<float>(std::min<float>(d->dragStartPitch_ + diff.y() * 0.01f, M_PI * 0.499f), 0.1f);
+            d->pitch_ = std::max<float>(std::min<float>(d->dragStartPitch_ + diff.y() * 0.01f, 3.14159265358979323846 * 0.499f), 0.1f);
         }
 
         update();
