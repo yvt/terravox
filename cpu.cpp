@@ -29,13 +29,15 @@ static CpuIdInfo GetCpuId(std::uint32_t eax, std::uint32_t ecx)
     CpuIdInfo info;
     asm volatile
     (
+        "mov %1, %%eax\n\t"
+        "mov %2, %%ecx\n\t"
         "cpuid\n\t"
         "mov %%eax, (%0)\n\t"
         "mov %%ebx, 4(%0)\n\t"
         "mov %%ecx, 8(%0)\n\t"
         "mov %%edx, 12(%0)\n\t"
         : /* no output registers */
-        : "r"(&info), "a"(eax), "c"(ecx)
+        : "r"(&info), "g"(eax), "g"(ecx)
         : "%eax", "%ebx", "%ecx", "%edx"
     );
     return info;
