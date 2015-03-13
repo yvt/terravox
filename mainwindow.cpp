@@ -513,7 +513,7 @@ void MainWindow::on_actionAbout_triggered()
                           "<br><br>For license information, please read LICENSE.txt that comes with this software."
                           "<br><br>See <a href='%2'>%2</a> for the source code repository, "
                           "issue tracker, and further information.")
-                       .arg("0.0.2", "https://github.com/yvt/terravox", QApplication::applicationName()));
+                       .arg("0.0.3", "https://github.com/yvt/terravox", QApplication::applicationName()));
 }
 
 void MainWindow::on_actionOpen_triggered()
