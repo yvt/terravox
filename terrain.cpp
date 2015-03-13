@@ -1,6 +1,6 @@
 #include "terrain.h"
 #include <xmmintrin.h>
-#include <smmintrin.h>
+#include "cpu.h"
 
 #if defined(__APPLE__)
 #  define memcpy std::memcpy
@@ -66,9 +66,13 @@ void Terrain::quantize()
     auto *lf = landform_.data();
     auto maxValue = _mm_set1_ps(63.f);
     auto minValue = _mm_set1_ps(0.f);
+
+    SseRoundingModeScope roundingModeScope(_MM_ROUND_NEAREST);
+    (void)roundingModeScope;
+
     for (int i = 0; i < numCells; i += 4) {
         auto p = _mm_loadu_ps(lf + i);
-        p = _mm_round_ps(p, _MM_ROUND_NEAREST);
+        p = _mm_cvtepi32_ps(_mm_cvttps_epi32(p));
         p = _mm_max_ps(p, minValue);
         p = _mm_min_ps(p, maxValue);
         _mm_storeu_ps(lf + i, p);

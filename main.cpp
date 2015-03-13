@@ -2,6 +2,8 @@
 #include <QApplication>
 #include <QTranslator>
 #include <QLibraryInfo>
+#include "cpu.h"
+#include <QMessageBox>
 
 int main(int argc, char *argv[])
 {
@@ -45,6 +47,12 @@ int main(int argc, char *argv[])
 #endif
     myappTranslator.load(QLocale::system(), "terravox_", QString(), dir);
     a.installTranslator(&myappTranslator);
+
+    if (!CpuId::supports(CpuId::Feature::Sse, CpuId::Feature::Sse2)) {
+        QMessageBox::critical(nullptr, a.applicationName(),
+          QApplication::tr("Terravox requires CPU which supports at least SSE and SSE2."));
+        return 0;
+    }
 
     MainWindow *w = new MainWindow();
     w->show();

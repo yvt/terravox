@@ -3,6 +3,7 @@
 #include <cmath>
 #include <smmintrin.h>
 #include "terrain.h"
+#include "cpu.h"
 
 #if defined(__APPLE__)
 #  define memset std::memset
@@ -194,9 +195,12 @@ void TerrainView::TerrainViewPrivate::renderLandform(Colorizer&& colorizer)
                     return _mm_castsi128_ps(_mm_srli_epi32(_mm_slli_epi32(_mm_castps_si128(m), 1), 1));
                 };
 
+                SseRoundingModeScope roundingModeScope(_MM_ROUND_DOWN);
+                (void) roundingModeScope;
+
                 for (int y = 0; y < imgHeight; y += 4) {
-                    auto fracX = _mm_sub_ps(bgScanPosX, _mm_floor_ps(bgScanPosX));
-                    auto fracY = _mm_sub_ps(bgScanPosY, _mm_floor_ps(bgScanPosY));
+                    auto fracX = _mm_sub_ps(bgScanPosX, _mm_cvtepi32_ps(_mm_cvtps_epi32(bgScanPosX)));
+                    auto fracY = _mm_sub_ps(bgScanPosY, _mm_cvtepi32_ps(_mm_cvtps_epi32(bgScanPosY)));
 
                     fracX = mm_abs_ps(_mm_sub_ps(fracX, _mm_set1_ps(0.5f)));
                     fracY = mm_abs_ps(_mm_sub_ps(fracY, _mm_set1_ps(0.5f)));
@@ -403,18 +407,17 @@ void TerrainView::TerrainViewPrivate::renderLandform(Colorizer&& colorizer)
                     travelDistance += xHitTime;
                 }
 
-                auto darken = [](quint32 col) -> quint32 {
-                    auto c = _mm_setr_epi32(col, 0, 0, 0);
+                auto darken = [](__m128i c) -> quint32 {
                     auto c2 = _mm_avg_epu8(c, _mm_setzero_si128());
                     c2 = _mm_avg_epu8(c, c2);
-                    return _mm_extract_epi32(c2, 0);
+                    return _mm_cvtsi128_si32(c2);
                 };
 
                 if (enteredScreen || zOffset < imgHeight) { // map fragment visible on screen?
                     // sample
                     Q_ASSERT(rayCellX >= 0 && rayCellY >= 0 && rayCellX < tWidth && rayCellY < tHeight);
                     float land = *landform;
-                    quint32 col = *color;
+                    __m128i col = _mm_castps_si128(_mm_load_ss(reinterpret_cast<const float *>(color)));
                     col = colorizer(col, land);
 
                     // draw wall
@@ -424,7 +427,7 @@ void TerrainView::TerrainViewPrivate::renderLandform(Colorizer&& colorizer)
                     fillWall(nextImgY);
 
                     // prepare for next floor drawing
-                    lastColor = col;
+                    lastColor = _mm_cvtsi128_si32(col);
                     lastImageFY = nextImgFY;
                     lastHeight = land;
 
@@ -593,10 +596,10 @@ QImage &TerrainView::TerrainViewPrivate::render(QSize size, const SceneDefinitio
     cameraDir2D = QVector2D(sceneDef.cameraDir.x(), sceneDef.cameraDir.y()).normalized();
 
     if (viewOptions.colorizeAltitude)
-        renderLandform1([](quint32 color, float alt) {
+        renderLandform1([](__m128i color, float alt) -> __m128i {
             (void) color;
             if (alt >= 62.5f) {
-                return 0x102040;
+                return _mm_setr_epi32(0x102040, 0, 0, 0);
             }
             auto m = _mm_set1_ps(alt);
             auto k = _mm_setr_ps(63.f, 43.f, 23.f, 3.f);
@@ -610,10 +613,10 @@ QImage &TerrainView::TerrainViewPrivate::render(QSize size, const SceneDefinitio
             mI = _mm_packus_epi16(mI, mI);
             mI = _mm_or_si128(mI, _mm_srli_epi64(mI, 24));
 
-            return _mm_extract_epi32(mI, 0);
+            return mI;
         });
     else
-        renderLandform1([](quint32 color, float alt) { return color; });
+        renderLandform1([](__m128i color, float alt) -> __m128i { return color; });
     if (viewOptions.showEdges)
         applySharpeningFilter();
     if (viewOptions.ambientOcclusion)

@@ -1,6 +1,7 @@
 #include "terrainview_p.h"
 #include <smmintrin.h>
 #include <QtConcurrent>
+#include "cpu.h"
 
 class TerrainView::TerrainViewPrivate::DrawingContext : public TerrainViewDrawingContext
 {
@@ -16,6 +17,9 @@ class TerrainView::TerrainViewPrivate::DrawingContext : public TerrainViewDrawin
         float *depthInput = p.depthImage_.data();
         const QVector3D sideIncl = p.rightVector * p.sceneDef.viewWidth / imgWidth;
         const QVector2D rayDir = p.cameraDir2D;
+
+        SseRoundingModeScope roundingModeScope(_MM_ROUND_DOWN);
+        (void) roundingModeScope;
 
         const quint32 *decalPixels = reinterpret_cast<quint32 *>(decal.bits());
 
@@ -61,9 +65,6 @@ class TerrainView::TerrainViewPrivate::DrawingContext : public TerrainViewDrawin
                     // transform to image coordinate
                     coords1 = _mm_mul_ps(_mm_add_ps(coords1, decalOrigin), decalScaler);
                     coords2 = _mm_mul_ps(_mm_add_ps(coords2, decalOrigin), decalScaler);
-
-                    coords1 = _mm_floor_ps(coords1);
-                    coords2 = _mm_floor_ps(coords2);
 
                     auto iCoords1 = _mm_cvttps_epi32(coords1);
                     auto iCoords2 = _mm_cvttps_epi32(coords2);

@@ -9,6 +9,7 @@
 #include "temporarybuffer.h"
 #include "coherentnoisegenerator.h"
 #include <random>
+#include "cpu.h"
 
 #if defined(__APPLE__)
 #  define sqrtf std::sqrtf
@@ -87,6 +88,10 @@ QSharedPointer<Terrain> BrushTool::tip(QPoint origin)
         switch (parameters_.tipType) {
         case BrushTipType::Mountains:
             {
+                // Set rounding mode (required by CoherentNoiseGenerator)
+                SseRoundingModeScope roundingModeScope(_MM_ROUND_DOWN);
+                (void) roundingModeScope;
+
                 if (noiseGenSeed != parameters_.seed) {
                     noiseGenSeed = parameters_.seed;
                     noiseGen.randomize(static_cast<std::uint_fast32_t>(noiseGenSeed));
@@ -262,7 +267,7 @@ void BrushToolEdit::drawRaiseLower(const QPoint &pt, Map &&map)
             int cy = y + dirtyRect.top();
             int tx = cx - pt.x();
             int ty = cy - pt.y();
-            terrain->landform(cx, cy) = map(terrain->landform(cx, cy), before->landform(x, y), tip->landform(tx, ty));
+            map(terrain->landform(cx, cy), before->landform(x, y), tip->landform(tx, ty));
         }
     }
     edit->endEdit(terrain);
@@ -295,7 +300,7 @@ void BrushToolEdit::drawColor(const QPoint &pt, Map &&map)
             int cy = y + dirtyRect.top();
             int tx = cx - pt.x();
             int ty = cy - pt.y();
-            terrain->color(cx, cy) = map(terrain->color(cx, cy), before->color(x, y), tip->landform(tx, ty));
+            map(terrain->color(cx, cy), before->color(x, y), tip->landform(tx, ty));
         }
     }
     edit->endEdit(terrain);
@@ -595,8 +600,18 @@ void BrushToolEdit::drawSmoothen(const QPoint &pt, float amount)
     edit->endEdit(terrain);
 }
 
+enum class BrushToolEdit::FeatureLevel
+{
+    Sse2
+};
 
 void BrushToolEdit::draw(const QPoint &pt, float strength)
+{
+    drawInner<FeatureLevel::Sse2>(pt, strength);
+}
+
+template<BrushToolEdit::FeatureLevel level>
+void BrushToolEdit::drawInner(const QPoint &pt, float strength)
 {
     float fixedStrength = params.strength;
     strength *= fixedStrength;
@@ -604,6 +619,9 @@ void BrushToolEdit::draw(const QPoint &pt, float strength)
     auto color = params.color;
     std::array<int, 3> colorParts = Terrain::expandColor(color);
     __m128 colorMM = _mm_setr_ps(colorParts[0], colorParts[1], colorParts[2], 0);
+
+    SseRoundingModeScope roundingModeScope(_MM_ROUND_NEAREST);
+    (void) roundingModeScope;
 
     switch (tool->type()) {
     case BrushType::Blur:
@@ -621,26 +639,25 @@ void BrushToolEdit::draw(const QPoint &pt, float strength)
         switch (params.pressureMode) {
         case BrushPressureMode::AirBrush:
             strength *= 3.f;
-            drawRaiseLower(pt, [=](float current, float before, float tip) {
+            drawRaiseLower(pt, [=](float &current, float before, float tip) {
                 (void) before;
-                return current - tip * strength;
+                current -= tip * strength;
             });
             break;
         case BrushPressureMode::Constant:
             if (tool->type() == BrushType::Lower) {
-                drawRaiseLower(pt, [=](float current, float before, float tip) {
-                    return Terrain::quantizeOne(std::max(current, before - tip * fixedStrength));
+                drawRaiseLower(pt, [=](float &current, float before, float tip) {
+                    current = Terrain::quantizeOne(std::max(current, before - tip * fixedStrength));
                 });
             } else {
-                drawRaiseLower(pt, [=](float current, float before, float tip) {
-                    return Terrain::quantizeOne(std::min(current, before - tip * fixedStrength));
+                drawRaiseLower(pt, [=](float &current, float before, float tip) {
+                    current = Terrain::quantizeOne(std::min(current, before - tip * fixedStrength));
                 });
             }
             break;
         case BrushPressureMode::Adjustable:
-            drawRaiseLower(pt, [=](float current, float before, float tip) {
-                (void) current;
-                return Terrain::quantizeOne(before - tip * strength);
+            drawRaiseLower(pt, [=](float &current, float before, float tip) {
+                current = Terrain::quantizeOne(before - tip * strength);
             });
             break;
         }
@@ -650,11 +667,11 @@ void BrushToolEdit::draw(const QPoint &pt, float strength)
         case BrushPressureMode::AirBrush:
             strength = 1.f - std::exp2(-strength);
 
-            drawColor(pt, [=](quint32 current, quint32 before, float tip) {
+            drawColor(pt, [=](quint32 &current, quint32 before, float tip) {
                 (void) before;
 
                 // convert current color to FP32
-                auto currentMM = _mm_setr_epi32(current, 0, 0, 0);
+                auto currentMM = _mm_castps_si128(_mm_load_ss(reinterpret_cast<float *>(&current)));
                 currentMM = _mm_unpacklo_epi8(currentMM, _mm_setzero_si128());
                 currentMM = _mm_unpacklo_epi16(currentMM, _mm_setzero_si128());
                 auto currentMF = _mm_cvtepi32_ps(currentMM);
@@ -668,19 +685,18 @@ void BrushToolEdit::draw(const QPoint &pt, float strength)
 
                 // convert to RGB32
                 currentMF = _mm_add_ps(currentMF, globalDitherSampler.getM128());
-                currentMF = _mm_round_ps(currentMF, _MM_ROUND_NEAREST);
                 currentMM = _mm_cvttps_epi32(currentMF);
                 currentMM = _mm_packs_epi32(currentMM, currentMM);
                 currentMM = _mm_packus_epi16(currentMM, currentMM);
 
-                return _mm_extract_epi32(currentMM, 0);
+                _mm_store_ss(reinterpret_cast<float *>(&current), currentMM);
             });
             break;
         case BrushPressureMode::Constant:
             fixedStrength *= 0.01f;
-            drawColor(pt, [=](quint32 current, quint32 before, float tip) {
+            drawColor(pt, [=](quint32 &current, quint32 before, float tip) {
                 // convert current color to FP32
-                auto currentMM = _mm_setr_epi32(current, 0, 0, 0);
+                auto currentMM = _mm_castps_si128(_mm_load_ss(reinterpret_cast<float *>(&current)));
                 currentMM = _mm_unpacklo_epi8(currentMM, _mm_setzero_si128());
                 currentMM = _mm_unpacklo_epi16(currentMM, _mm_setzero_si128());
                 auto currentMF = _mm_cvtepi32_ps(currentMM);
@@ -707,18 +723,16 @@ void BrushToolEdit::draw(const QPoint &pt, float strength)
 
                 // convert to RGB32
                 currentMF = _mm_add_ps(currentMF, globalDitherSampler.getM128());
-                currentMF = _mm_round_ps(currentMF, _MM_ROUND_NEAREST);
                 currentMM = _mm_cvttps_epi32(currentMF);
                 currentMM = _mm_packs_epi32(currentMM, currentMM);
                 currentMM = _mm_packus_epi16(currentMM, currentMM);
 
-                return _mm_extract_epi32(currentMM, 0);
+                _mm_store_ss(reinterpret_cast<float *>(&current), currentMM);
             });
             break;
         case BrushPressureMode::Adjustable:
             strength *= 0.01f;
-            drawColor(pt, [=](quint32 current, quint32 before, float tip) {
-                (void) current;
+            drawColor(pt, [=](quint32 &current, quint32 before, float tip) {
 
                 // convert before color to FP32
                 auto beforeMM = _mm_setr_epi32(before, 0, 0, 0);
@@ -734,12 +748,11 @@ void BrushToolEdit::draw(const QPoint &pt, float strength)
 
                 // convert to RGB32
                 beforeMF = _mm_add_ps(beforeMF, globalDitherSampler.getM128());
-                beforeMF = _mm_round_ps(beforeMF, _MM_ROUND_NEAREST);
                 beforeMM = _mm_cvttps_epi32(beforeMF);
                 beforeMM = _mm_packs_epi32(beforeMM, beforeMM);
                 beforeMM = _mm_packus_epi16(beforeMM, beforeMM);
 
-                return _mm_extract_epi32(beforeMM, 0);
+                _mm_store_ss(reinterpret_cast<float *>(&current), beforeMM);
             });
             break;
         }

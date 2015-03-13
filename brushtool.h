@@ -102,6 +102,11 @@ class BrushToolEdit
 
     void drawBlur(const QPoint&, float amount);
     void drawSmoothen(const QPoint&, float amount);
+
+    enum class FeatureLevel;
+
+    template <FeatureLevel>
+    void drawInner(const QPoint&, float strength);
 public:
     ~BrushToolEdit();
 

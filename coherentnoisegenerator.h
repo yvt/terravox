@@ -33,10 +33,13 @@ public:
             mask = _mm_set1_epi32(size - 1);
         }
     public:
+
+        // NOTICE: to use this, rounding mode must be set to _MM_ROUND_DOWN
         inline float sample(__m128 coord /* [ x, y, [who cares?]x2 ] from lower to upper */) {
             // compute index
-            auto coordIF = _mm_floor_ps(coord);
-            auto coordI = _mm_cvtps_epi32(coordIF);
+            __m128i coordI = _mm_cvtps_epi32(coord);
+            __m128 coordIF = _mm_cvtepi32_ps(coordI);
+
             coordI = _mm_and_si128(coordI, mask);
 
             uint index = _mm_extract_epi16(coordI, 0);
