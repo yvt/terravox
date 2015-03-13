@@ -195,7 +195,7 @@
     <message>
         <location filename="mainwindow.ui" line="120"/>
         <location filename="mainwindow.ui" line="123"/>
-        <location filename="mainwindow.cpp" line="475"/>
+        <location filename="mainwindow.cpp" line="479"/>
         <source>Pan</source>
         <translation>パン</translation>
     </message>
@@ -243,7 +243,7 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="394"/>
-        <location filename="mainwindow.cpp" line="658"/>
+        <location filename="mainwindow.cpp" line="662"/>
         <source>Primary Color</source>
         <translation>主カラー</translation>
     </message>
@@ -263,122 +263,122 @@
         <translation>ツール(&amp;T)</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="451"/>
+        <location filename="mainwindow.ui" line="449"/>
         <source>&amp;View</source>
         <translation>表示(&amp;V)</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="457"/>
+        <location filename="mainwindow.ui" line="455"/>
         <source>&amp;Edit</source>
         <translation>編集(&amp;E)</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="464"/>
+        <location filename="mainwindow.ui" line="462"/>
         <source>&amp;Help</source>
         <translation>ヘルプ(&amp;H)</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="471"/>
+        <location filename="mainwindow.ui" line="469"/>
         <source>Fil&amp;ters</source>
         <translation>フィルタ(&amp;T)</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="484"/>
+        <location filename="mainwindow.ui" line="482"/>
         <source>&amp;Open Existing Terrain...</source>
         <translation>地形を開く(&amp;O)...</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="487"/>
+        <location filename="mainwindow.ui" line="485"/>
         <source>Ctrl+O</source>
         <translation>Ctrl+O</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="492"/>
+        <location filename="mainwindow.ui" line="490"/>
         <source>&amp;Save</source>
         <translation>保存(&amp;S)</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="495"/>
+        <location filename="mainwindow.ui" line="493"/>
         <source>Ctrl+S</source>
         <translation>Ctrl+S</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="500"/>
+        <location filename="mainwindow.ui" line="498"/>
         <source>Save &amp;As...</source>
         <translation>名前を付けて保存(&amp;A)...</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="503"/>
+        <location filename="mainwindow.ui" line="501"/>
         <source>Ctrl+Shift+S</source>
         <translation>Ctrl+Shift+S</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="508"/>
+        <location filename="mainwindow.ui" line="506"/>
         <source>E&amp;xit</source>
         <translation>終了(&amp;X)</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="513"/>
+        <location filename="mainwindow.ui" line="511"/>
         <source>&amp;Preferences</source>
         <translation>環境設定(&amp;P)</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="518"/>
+        <location filename="mainwindow.ui" line="516"/>
         <source>Show &amp;View Options</source>
         <translation>表示オプション(&amp;V)</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="521"/>
+        <location filename="mainwindow.ui" line="519"/>
         <source>Ctrl+Shift+V</source>
         <translation>Ctrl+Shift+V</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="526"/>
+        <location filename="mainwindow.ui" line="524"/>
         <source>&amp;Undo</source>
         <translation>元に戻す(&amp;U)</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="529"/>
+        <location filename="mainwindow.ui" line="527"/>
         <source>Ctrl+Z</source>
         <translation>Ctrl+Z</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="534"/>
+        <location filename="mainwindow.ui" line="532"/>
         <source>&amp;Redo</source>
         <translation>やり直す(&amp;R)</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="537"/>
+        <location filename="mainwindow.ui" line="535"/>
         <source>Ctrl+Shift+Z</source>
         <translation>Ctrl+Shift+Z</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="542"/>
+        <location filename="mainwindow.ui" line="540"/>
         <source>About &amp;Qt...</source>
         <translation>Qtについて(&amp;Q)...</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="550"/>
+        <location filename="mainwindow.ui" line="548"/>
         <source>About...</source>
         <translation>バージョン情報...</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="558"/>
+        <location filename="mainwindow.ui" line="556"/>
         <source>Plain</source>
         <translation>平坦</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="563"/>
+        <location filename="mainwindow.ui" line="561"/>
         <source>Fractal Landscape</source>
         <translation>フラクタル地形</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="568"/>
+        <location filename="mainwindow.ui" line="566"/>
         <source>&amp;Erosion...</source>
         <translation>侵食(&amp;E)...</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="573"/>
+        <location filename="mainwindow.ui" line="571"/>
         <source>Open Scripts Folder</source>
         <oldsource>Open Pluigns Folder</oldsource>
         <translation>スクリプトフォルダを開く</translation>
@@ -389,91 +389,91 @@
         <translation>プラグインまたはプラグインシステムでエラーが発生しました。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="204"/>
+        <location filename="mainwindow.cpp" line="208"/>
         <source>%2[*] - %1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="204"/>
+        <location filename="mainwindow.cpp" line="208"/>
         <source>Untitled</source>
         <translation>無題</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="319"/>
-        <location filename="mainwindow.cpp" line="344"/>
+        <location filename="mainwindow.cpp" line="323"/>
+        <location filename="mainwindow.cpp" line="348"/>
         <source>Could not save file.</source>
         <translation>ファイルを保存できませんでした。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="334"/>
+        <location filename="mainwindow.cpp" line="338"/>
         <source>Save As</source>
         <translation>名前を付けて保存</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="335"/>
-        <location filename="mainwindow.cpp" line="519"/>
+        <location filename="mainwindow.cpp" line="339"/>
+        <location filename="mainwindow.cpp" line="523"/>
         <source>Voxlap5 512x512x64 VXL (*.vxl)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="370"/>
+        <location filename="mainwindow.cpp" line="374"/>
         <source>Failed to encode VXL data.</source>
         <translation>VXLデータのエンコードに失敗しました。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="397"/>
+        <location filename="mainwindow.cpp" line="401"/>
         <source>Terrain has been changed.</source>
         <translation>地形は変更されています。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="399"/>
+        <location filename="mainwindow.cpp" line="403"/>
         <source>Do you want to save the terrain?</source>
         <translation>地形を保存しますか?</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="507"/>
+        <location filename="mainwindow.cpp" line="511"/>
         <source>About Terravox</source>
         <translation>Terravoxについて</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="508"/>
+        <location filename="mainwindow.cpp" line="512"/>
         <source>%3 (version %1)&lt;br&gt;&lt;br&gt;For license information, please read LICENSE.txt that comes with this software.&lt;br&gt;&lt;br&gt;See &lt;a href=&apos;%2&apos;&gt;%2&lt;/a&gt; for the source code repository, issue tracker, and further information.</source>
         <translation>%3 (バージョン %1)&lt;br&gt;&lt;br&gt;ライセンス情報については、このソフトウェアに付属するLICENSE.txtをご覧下さい。&lt;br&gt;&lt;br&gt;&lt;a href=&apos;%2&apos;&gt;%2&lt;/a&gt;から、ソースコードリポジトリ、問題トラッカー、及びその他の情報にアクセスすることができます。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="518"/>
+        <location filename="mainwindow.cpp" line="522"/>
         <source>Open</source>
         <translation>開く</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="527"/>
+        <location filename="mainwindow.cpp" line="531"/>
         <source>Could not open file.</source>
         <translation>ファイルを開けませんでした。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="565"/>
+        <location filename="mainwindow.cpp" line="569"/>
         <source>File could be opened successfully, but there was a problem.</source>
         <translation>ファイルを開くことは成功しましたが、問題があります。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="695"/>
-        <location filename="mainwindow.cpp" line="707"/>
-        <location filename="mainwindow.cpp" line="718"/>
+        <location filename="mainwindow.cpp" line="699"/>
+        <location filename="mainwindow.cpp" line="711"/>
+        <location filename="mainwindow.cpp" line="722"/>
         <source>Cannot open the plugins folder.</source>
         <translation>プラグインフォルダを開けませんでした。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="698"/>
+        <location filename="mainwindow.cpp" line="702"/>
         <source>Could not determine a writable plugins folder.</source>
         <translation>書き込み可能なプラグインフォルダの場所を決定できませんでした。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="710"/>
+        <location filename="mainwindow.cpp" line="714"/>
         <source>Could not create the plugins folder at &apos;%1&apos;.</source>
         <translation>プラグインフォルダを &apos;%1&apos; に作成できませんでした。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="721"/>
+        <location filename="mainwindow.cpp" line="725"/>
         <source>Failed to launch the file manager to show &apos;%1&apos;.</source>
         <translation>&apos;%1&apos; を表示するためにファイルマネージャを起動することができませんでした。</translation>
     </message>
@@ -489,6 +489,14 @@
         <location filename="manipulatetoolcontroller.cpp" line="32"/>
         <source>Paint</source>
         <translation>ペイント</translation>
+    </message>
+</context>
+<context>
+    <name>QApplication</name>
+    <message>
+        <location filename="main.cpp" line="53"/>
+        <source>Terravox requires CPU which supports at least SSE and SSE2.</source>
+        <translation type="unfinished">Terravoxを実行するにはSSEとSSE2をサポートするCPUが必要です。</translation>
     </message>
 </context>
 <context>
