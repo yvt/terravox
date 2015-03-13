@@ -35,7 +35,7 @@ static CpuIdInfo GetCpuId(std::uint32_t eax, std::uint32_t ecx)
         "mov %%ecx, 8(%0)\n\t"
         "mov %%edx, 12(%0)\n\t"
         : /* no output registers */
-        : "r"(&info), "a"(eax), "b"(0xdeadbeef), "c"(ecx), "d"(0xdeadbeef)
+        : "r"(&info), "a"(eax), "c"(ecx)
         : "%eax", "%ebx", "%ecx", "%edx"
     );
     return info;

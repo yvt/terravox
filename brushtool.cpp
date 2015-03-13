@@ -689,7 +689,7 @@ void BrushToolEdit::drawInner(const QPoint &pt, float strength)
                 currentMM = _mm_packs_epi32(currentMM, currentMM);
                 currentMM = _mm_packus_epi16(currentMM, currentMM);
 
-                _mm_store_ss(reinterpret_cast<float *>(&current), currentMM);
+                _mm_store_ss(reinterpret_cast<float *>(&current), _mm_castsi128_ps(currentMM));
             });
             break;
         case BrushPressureMode::Constant:
@@ -727,7 +727,7 @@ void BrushToolEdit::drawInner(const QPoint &pt, float strength)
                 currentMM = _mm_packs_epi32(currentMM, currentMM);
                 currentMM = _mm_packus_epi16(currentMM, currentMM);
 
-                _mm_store_ss(reinterpret_cast<float *>(&current), currentMM);
+                _mm_store_ss(reinterpret_cast<float *>(&current), _mm_castsi128_ps(currentMM));
             });
             break;
         case BrushPressureMode::Adjustable:
@@ -752,7 +752,7 @@ void BrushToolEdit::drawInner(const QPoint &pt, float strength)
                 beforeMM = _mm_packs_epi32(beforeMM, beforeMM);
                 beforeMM = _mm_packus_epi16(beforeMM, beforeMM);
 
-                _mm_store_ss(reinterpret_cast<float *>(&current), beforeMM);
+                _mm_store_ss(reinterpret_cast<float *>(&current), _mm_castsi128_ps(beforeMM));
             });
             break;
         }
