@@ -5,8 +5,8 @@ Terravox
 
 Terravox is a heightmap Editor which can be used to create a Voxlap5 VXL data quickly.
 
-![](https://dl.dropboxusercontent.com/u/37804131/terravox/ss1.png)
-![](https://dl.dropboxusercontent.com/u/37804131/terravox/shot0624.jpg)
+![](https://openspadesmedia.yvt.jp/misc/terravox/ss1.png)
+![](https://openspadesmedia.yvt.jp/misc/terravox/shot0624.jpg)
 
 Installation
 ------------
